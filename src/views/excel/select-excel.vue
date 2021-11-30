@@ -94,7 +94,7 @@ export default {
         })
       } else {
         this.$message({
-          message: 'Please select at least one item',
+          message: '请至少选择一条数据',
           type: 'warning'
         })
       }

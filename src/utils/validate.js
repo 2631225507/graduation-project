@@ -56,6 +56,7 @@ export function validAlphabets(str) {
 }
 
 /**
+ * @desc 校验邮箱是否合法
  * @param {string} email
  * @returns {Boolean}
  */
@@ -64,7 +65,19 @@ export function validEmail(email) {
   return reg.test(email)
 }
 
+
 /**
+ * @desc 校验手机号是否合法
+ * @param {string} phone
+ * @returns {Boolean}
+ */
+export function isvalidPhone(str) {
+  const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+  return reg.test(str)
+}
+
+/**
+ * @desc 校验是否为字符串
  * @param {string} str
  * @returns {Boolean}
  */
@@ -76,6 +89,7 @@ export function isString(str) {
 }
 
 /**
+ * @desc 校验是否为数组
  * @param {Array} arg
  * @returns {Boolean}
  */

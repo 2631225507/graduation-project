@@ -10,7 +10,7 @@ import Layout from '@/layout'
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -70,41 +70,152 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
+  // 首页-大数据面板
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/home',
     children: [
       {
-        path: 'dashboard',
+        path: 'home',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        name: 'Home',
+        meta: { title: '首页', icon: 'home', affix: true }
       }
     ]
   },
+  // 客户中心
   {
-    path: '/documentation',
+    path: '/customer_center',
     component: Layout,
+    redirect: '/customer_center/customer_archives',
+    name: 'Customer-Center',
+    meta: {
+      title: '客户中心',
+      icon: 'customer-center'
+    },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
+        path: 'customer_archives',
+        component: () => import('@/views/customer_center/customer_archives/index'),
+        name: 'Customer_Archives',
+        meta: { title: '客户档案信息' , icon: 'customer-archives'}
+      },
+      {
+        path: 'customer_statistics',
+        component: () => import('@/views/customer_center/customer_statistics/index'),
+        name: 'Customer-Statistics',
+        meta: { title: '客户数据统计', icon: 'customer-statistics'}
       }
     ]
   },
+
+  // 订单中心
   {
-    path: '/guide',
+    path: '/order_center',
     component: Layout,
-    redirect: '/guide/index',
+    redirect: '/order_center/client_order',
+    name: 'Order-Center',
+    meta: {
+      title: '订单中心',
+      icon: 'order-center'
+    },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
+        path: 'client_order',
+        component: () => import('@/views/order_center/client_order/index'),
+        name: 'Client-Order',
+        meta: { title: '客户下单' , icon: 'orders'}
+      },
+      {
+        path: 'order_management',
+        component: () => import('@/views/order_center/order_management/index'),
+        name: 'Order-Management',
+        meta: { title: '订单管理' , icon: 'order-management'}
+      }
+    ]
+  },
+
+  // 产品管理
+  {
+    path: '/product_management',
+    component: Layout,
+    redirect: '/product_management/add_product',
+    name: 'Product-Management',
+    meta: {
+      title: '产品管理',
+      icon: 'product-management'
+    },
+    children: [
+      {
+        path: 'add_product',
+        component: () => import('@/views/product_management/add_product/index'),
+        name: 'Add-Product',
+        meta: { title: '添加产品' , icon: 'add'}
+      },
+      {
+        path: 'code_number',
+        component: () => import('@/views/product_management/code_number/index'),
+        name: 'Code-Number',
+        meta: { title: '客户鞋码与产品对应码' , icon: 'bar-code'}
+      },
+      {
+        path: 'product_inventory',
+        component: () => import('@/views/product_management/product_inventory/index'),
+        name: 'Product-Inventory',
+        meta: { title: '产品库存' , icon: 'inventory'}
+      }
+    ]
+  },
+
+  // 员工管理
+  {
+    path: '/staff_management',
+    component: Layout,
+    redirect: '/staff_management/staff_info',
+    name: 'Staff-Management',
+    meta: {
+      title: '员工管理',
+      icon: 'staff-management'
+    },
+    children: [
+      {
+        path: 'staff_info',
+        component: () => import('@/views/staff_management/staff_info/index'),
+        name: 'Staff_Info',
+        meta: { title: '员工信息' ,  icon: 'into-warehouse' }
+      },
+      {
+        path: 'staff_statistics',
+        component: () => import('@/views/staff_management/staff_statistics/index'),
+        name: 'Staff_Statistics',
+        meta: { title: '员工统计' ,icon: 'out-warehouse'}
+      }
+    ]
+  },
+
+  // 出入库中心
+  {
+    path: '/inventory_center',
+    component: Layout,
+    redirect: '/inventory_center/into_warehous',
+    name: 'Inventory-Center',
+    meta: {
+      title: '出入库中心',
+      icon: 'inventory-management'
+    },
+    children: [
+      {
+        path: 'into_warehous',
+        component: () => import('@/views/inventory_center/into_warehous/index'),
+        name: 'Into-Warehoust',
+        meta: { title: '入库管理' ,  icon: 'into-warehouse' }
+      },
+      {
+        path: 'out_warehouse',
+        component: () => import('@/views/inventory_center/out_warehouse/index'),
+        name: 'Out-Warehouse',
+        meta: { title: '出库管理' ,icon: 'out-warehouse'}
       }
     ]
   },
@@ -187,7 +298,6 @@ export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   chartsRouter,
-  nestedRouter,
   tableRouter,
 
   {
@@ -260,19 +370,7 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/error-log',
-    component: Layout,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/error-log/index'),
-        name: 'ErrorLog',
-        meta: { title: 'Error Log', icon: 'bug' }
-      }
-    ]
-  },
-
+  
   {
     path: '/excel',
     component: Layout,
@@ -328,25 +426,6 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/pdf',
-    component: Layout,
-    redirect: '/pdf/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/pdf/index'),
-        name: 'PDF',
-        meta: { title: 'PDF', icon: 'pdf' }
-      }
-    ]
-  },
-  {
-    path: '/pdf/download',
-    component: () => import('@/views/pdf/download'),
-    hidden: true
-  },
-
-  {
     path: '/theme',
     component: Layout,
     children: [
@@ -355,30 +434,6 @@ export const asyncRoutes = [
         component: () => import('@/views/theme/index'),
         name: 'Theme',
         meta: { title: 'Theme', icon: 'theme' }
-      }
-    ]
-  },
-
-  {
-    path: '/clipboard',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/clipboard/index'),
-        name: 'ClipboardDemo',
-        meta: { title: 'Clipboard', icon: 'clipboard' }
-      }
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
-        meta: { title: 'External Link', icon: 'link' }
       }
     ]
   },

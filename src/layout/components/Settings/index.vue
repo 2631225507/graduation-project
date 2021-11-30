@@ -4,20 +4,10 @@
       <h3 class="drawer-title">Page style setting</h3>
 
       <div class="drawer-item">
-        <span>Theme Color</span>
-        <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
-      </div>
-
-      <div class="drawer-item">
         <span>Open Tags-View</span>
         <el-switch v-model="tagsView" class="drawer-switch" />
       </div>
-
-      <div class="drawer-item">
-        <span>Fixed Header</span>
-        <el-switch v-model="fixedHeader" class="drawer-switch" />
-      </div>
-
+      
       <div class="drawer-item">
         <span>Sidebar Logo</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
@@ -28,25 +18,11 @@
 </template>
 
 <script>
-import ThemePicker from '@/components/ThemePicker'
-
 export default {
-  components: { ThemePicker },
   data() {
     return {}
   },
   computed: {
-    fixedHeader: {
-      get() {
-        return this.$store.state.settings.fixedHeader
-      },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'fixedHeader',
-          value: val
-        })
-      }
-    },
     tagsView: {
       get() {
         return this.$store.state.settings.tagsView
@@ -68,14 +44,6 @@ export default {
           value: val
         })
       }
-    }
-  },
-  methods: {
-    themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'theme',
-        value: val
-      })
     }
   }
 }
