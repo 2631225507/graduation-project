@@ -1,5 +1,5 @@
 module.exports = {
-  title: '莆田力宁体育用品',
+  title: '力宁体育用品',
 
   /**
    * @type {boolean} true | false
