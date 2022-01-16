@@ -180,6 +180,7 @@
             clearable
             placeholder="请选择销售产品"
             style="width: 510px"
+            @change="selValue"
           >
             <el-option
               v-for="item in options"
@@ -188,6 +189,18 @@
               :value="item.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item
+          v-for="(item, index) in clientInfo.product_detail"
+          :label="index"
+          :key="item.key"
+          :rules="{
+            required: true,
+            message: '单价不能为空',
+            trigger: 'blur',
+          }"
+        >
+          <el-input v-model="item.value"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -336,17 +349,21 @@ export default {
         city: "",
         area: "",
         product_name: [],
+        product_detail: [{
+          value:'1'
+        }],
       },
       options: [
         {
-          value: "选项1",
+          value: "黄金糕",
           label: "黄金糕",
         },
         {
-          value: "选项2",
+          value: "双皮奶",
           label: "双皮奶",
         },
       ],
+      product: [],
       multipleSelection: [], //表格勾选数据
       dialogFormVisible: false, //添加修改弹窗
       dialogProductVisible: false, //详情弹窗
@@ -489,6 +506,16 @@ export default {
         type: "warning",
       }).then(() => {
         this.list.splice(index, 1);
+      });
+    },
+    // 添加单价和净含量
+    selValue() {
+      console.log(this.clientInfo.product_name);
+      this.product = this.clientInfo.product_name;
+      console.log(this.clientInfo.product_detail);
+      this.clientInfo[product_detail].push({
+        value: '',
+        key: Date.now(),
       });
     },
     // 导出EXCEL表格

@@ -99,13 +99,13 @@ export const constantRoutes = [
         path: 'customer_archives',
         component: () => import('@/views/customer_center/customer_archives/index'),
         name: 'Customer_Archives',
-        meta: { title: '客户档案信息' , icon: 'customer-archives'}
+        meta: { title: '客户档案信息', icon: 'customer-archives' }
       },
       {
         path: 'customer_statistics',
         component: () => import('@/views/customer_center/customer_statistics/index'),
         name: 'Customer-Statistics',
-        meta: { title: '客户数据统计', icon: 'customer-statistics'}
+        meta: { title: '客户数据统计', icon: 'customer-statistics' }
       }
     ]
   },
@@ -125,13 +125,13 @@ export const constantRoutes = [
         path: 'client_order',
         component: () => import('@/views/order_center/client_order/index'),
         name: 'Client-Order',
-        meta: { title: '客户下单' , icon: 'orders'}
+        meta: { title: '客户下单', icon: 'orders' }
       },
       {
         path: 'order_management',
         component: () => import('@/views/order_center/order_management/index'),
         name: 'Order-Management',
-        meta: { title: '订单管理' , icon: 'order-management'}
+        meta: { title: '订单管理', icon: 'order-management' }
       }
     ]
   },
@@ -148,22 +148,16 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'add_product',
-        component: () => import('@/views/product_management/add_product/index'),
-        name: 'Add-Product',
-        meta: { title: '添加产品' , icon: 'add'}
-      },
-      {
         path: 'code_number',
         component: () => import('@/views/product_management/code_number/index'),
         name: 'Code-Number',
-        meta: { title: '客户鞋码与产品对应码' , icon: 'bar-code'}
+        meta: { title: '产品列表', icon: 'bar-code' }
       },
       {
         path: 'product_inventory',
         component: () => import('@/views/product_management/product_inventory/index'),
         name: 'Product-Inventory',
-        meta: { title: '产品库存' , icon: 'inventory'}
+        meta: { title: '产品库存', icon: 'inventory' }
       }
     ]
   },
@@ -183,13 +177,13 @@ export const constantRoutes = [
         path: 'staff_info',
         component: () => import('@/views/staff_management/staff_info/index'),
         name: 'Staff_Info',
-        meta: { title: '员工信息' ,  icon: 'into-warehouse' }
+        meta: { title: '员工信息', icon: 'into-warehouse' }
       },
       {
         path: 'staff_statistics',
         component: () => import('@/views/staff_management/staff_statistics/index'),
         name: 'Staff_Statistics',
-        meta: { title: '员工统计' ,icon: 'out-warehouse'}
+        meta: { title: '员工统计', icon: 'out-warehouse' }
       }
     ]
   },
@@ -209,16 +203,37 @@ export const constantRoutes = [
         path: 'into_warehous',
         component: () => import('@/views/inventory_center/into_warehous/index'),
         name: 'Into-Warehoust',
-        meta: { title: '入库管理' ,  icon: 'into-warehouse' }
+        meta: { title: '入库管理', icon: 'into-warehouse' }
       },
       {
         path: 'out_warehouse',
         component: () => import('@/views/inventory_center/out_warehouse/index'),
         name: 'Out-Warehouse',
-        meta: { title: '出库管理' ,icon: 'out-warehouse'}
+        meta: { title: '出库管理', icon: 'out-warehouse' }
       }
     ]
   },
+  // 货架管理
+  {
+    path: '/shelf-management',
+    component: Layout,
+    redirect: '/shelf-management/shelf_info',
+    name: 'Shelf-Management',
+    meta: {
+      title: '货架管理',
+      icon: 'inventory-management'
+    },
+    children: [
+      {
+        path: 'shelf_info',
+        component: () => import('@/views/shelf-management/shelf_info/index'),
+        name: 'Shelf-Info',
+        meta: { title: '货架信息', icon: 'into-warehouse' }
+      }
+    ]
+  },
+
+
   {
     path: '/profile',
     component: Layout,
@@ -370,7 +385,7 @@ export const asyncRoutes = [
     ]
   },
 
-  
+
   {
     path: '/excel',
     component: Layout,
