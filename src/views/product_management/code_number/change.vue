@@ -2,9 +2,9 @@
   <div class="change-data">
     <el-dialog
       :title="dialogStatus == 'create' ? '添加产品信息' : '编辑产品信息'"
-      :visible.sync="dialogFormVisible"
+      :visible.sync="isShow"
       center
-      width="60%"
+      width="50%"
       @close="cancleClick"
     >
       <el-form
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       shelfData: {},
-      dialogFormVisible: false,
+      isShow: this.dialogForm,
       rules: {
         code: [{ required: true, message: "请选择区代号", trigger: "change" }],
         code_number: [
@@ -59,85 +59,37 @@ export default {
     },
   },
   watch: {
-    dialogForm(newVal, oldVal) {
-      this.dialogFormVisible = newVal;
-      this.resetTemp();
+    dialogForm(newVal) {
+      this.isShow = newVal;
     },
   },
   methods: {
     // 取消
     cancleClick() {
-      this.$emit("cancleClick");
+      this.$emit("update:dialogForm",false);
     },
     // 确认
     confirmClick() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          this.$emit("cancleClick");
+          this.cancleClick()
         }
       });
     },
-    // 清空添加弹窗数据
-    resetTemp() {
-      this.shelfData = {};
-      this.$nextTick(() => {
-        this.$refs["dataForm"].clearValidate();
-      });
-    },
-    // 打开添加弹窗
-    // handleCreate() {
-    //   this.resetTemp();
-    //   this.dialogStatus = "create";
-    //   this.dialogFormVisible = true;
-    //   this.$nextTick(() => {
-    //     this.$refs["dataForm"].clearValidate();
-    //   });
-    // },
     // 提交客户档案信息（添加）
     createData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          createArticle(this.clientInfo).then(() => {
-            this.list.unshift(this.clientInfo);
-            this.dialogFormVisible = false;
-            this.$notify({
-              title: "Success",
-              message: "Created Successfully",
-              type: "success",
-              duration: 2000,
-            });
-          });
+       
         }
       });
     },
-    // 打开修改弹窗
-    // handleUpdate(row) {
-    //   this.clientInfo = Object.assign({}, row); // copy obj
-    //   this.dialogStatus = "update";
-    //   this.dialogFormVisible = true;
-    //   this.$nextTick(() => {
-    //     this.$refs["dataForm"].clearValidate();
-    //   });
-    // },
+ 
     // 提交客户档案信息（编辑）
     updateData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.clientInfo);
-          tempData.timestamp = +new Date(tempData.timestamp);
-          updateArticle(tempData).then(() => {
-            const index = this.list.findIndex(
-              (v) => v.id === this.clientInfo.id
-            );
-            this.list.splice(index, 1, this.clientInfo);
-            this.dialogFormVisible = false;
-            this.$notify({
-              title: "Success",
-              message: "Update Successfully",
-              type: "success",
-              duration: 2000,
-            });
-          });
+        
         }
       });
     },

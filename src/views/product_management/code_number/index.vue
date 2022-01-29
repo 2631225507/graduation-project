@@ -16,7 +16,7 @@
         @click="handleFilter"
         >查询</el-button
       >
-       <el-button
+      <el-button
         class="filter-item"
         type="primary"
         icon="el-icon-plus"
@@ -36,7 +36,9 @@
 
     <!-- 表格 -->
     <el-table
+      v-if="tableHeight"
       :data="tableData"
+      :height="tableHeight"
       border
       style="width: 100%"
     >
@@ -68,29 +70,19 @@
         align="center"
       >
       </el-table-column>
-      <el-table-column
-        prop="c_phone"
-        label="颜色"
-        width="145"
-        align="center"
-      >
+      <el-table-column prop="c_phone" label="颜色" width="145" align="center">
       </el-table-column>
-      <el-table-column
-        prop="detailed"
-        label="尺码"
-        width="200"
-        align="center"
-      >
+      <el-table-column prop="detailed" label="尺码" width="200" align="center">
       </el-table-column>
       <el-table-column prop="sname" label="图例" width="100" align="center">
       </el-table-column>
       <el-table-column prop="time" label="库存" width="100" align="center">
       </el-table-column>
-       <el-table-column
+      <el-table-column
         label="操作"
         align="center"
         width="200"
-        fixed='right'
+        fixed="right"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
@@ -120,11 +112,11 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
-      <!-- 添加修改 -->
+    <!-- 添加修改 -->
     <change-info
+      v-if="dialogForm"
       :dialogStatus="dialogStatus"
-      :dialogForm="dialogForm"
-      @cancleClick="cancleClick"
+      :dialogForm.sync="dialogForm"
     ></change-info>
   </div>
 </template>
@@ -223,22 +215,18 @@ export default {
       dialogForm: false, //添加修改弹窗
       dialogStatus: "", //添加修改弹窗标题
       downloadLoading: false,
+      tableHeight: "",
     };
   },
+  created() {
+    this.getList();
+  },
+  mounted() {
+    this.tableHeight = window.innerHeight - 188 - 55;
+  },
   methods: {
-  
     // 获取入库信息
-    getList() {
-      // this.listLoading = true;
-      // fetchList(this.listQuery).then((response) => {
-      //   this.list = response.data.items;
-      //   this.total = response.data.total;
-      //   // 模拟请求的时间
-      setTimeout(() => {
-        this.listLoading = false;
-      }, 1.5 * 1000);
-      // });
-    },
+    getList() {},
     // 查询数据
     handleFilter() {
       this.listQuery.page = 1;
@@ -279,11 +267,7 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) => filterVal.map((j) => v[j]));
     },
-     // 关闭添加、修改弹窗
-    cancleClick() {
-      this.dialogForm = false;
-    },
-      // 打开添加弹窗
+    // 打开添加弹窗
     handleCreate() {
       this.dialogStatus = "create";
       this.dialogForm = true;
@@ -293,7 +277,7 @@ export default {
       this.dialogStatus = "update";
       this.dialogForm = true;
     },
-     // 删除客户档案信息
+    // 删除客户档案信息
     handleDelete(row, index) {
       this.$confirm(`是否继续删除区代号为【${row.code}】的信息?`, "删除", {
         confirmButtonText: "确定",

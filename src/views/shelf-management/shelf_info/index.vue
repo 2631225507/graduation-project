@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="shelf-info">
     <!-- 功能区 -->
     <div class="filter-container">
       <el-input
@@ -39,7 +39,9 @@
       ref="multipleTable"
       style="width: 100%"
       v-loading="listLoading"
+      v-if="tableHeight"
       :data="list"
+      :height="tableHeight"
       border
       fit
       highlight-current-row
@@ -113,16 +115,16 @@
 
     <!-- 查看详情 -->
     <detail-info
+      v-if="dialogVisible"
       :title="detailTitle"
-      :dialogVisible="dialogVisible"
-      @closeDialog="closeDialog"
+      :dialogVisible.sync="dialogVisible"
     ></detail-info>
 
     <!-- 添加修改 -->
     <change-info
+      v-if="dialogForm"
       :dialogStatus="dialogStatus"
-      :dialogForm="dialogForm"
-      @cancleClick="cancleClick"
+      :dialogForm.sync="dialogForm"
     ></change-info>
   </div>
 </template>
@@ -163,6 +165,7 @@ export default {
         limit: 10,
         name: undefined,
       },
+      tableHeight: "",
       multipleSelection: [], //表格勾选数据
       downloadLoading: false,
       dialogVisible: false, //查看详情弹窗
@@ -173,6 +176,9 @@ export default {
   },
   created() {
     this.getList();
+  },
+  mounted() {
+    this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
     // 获取客户档案信息数据
@@ -204,10 +210,6 @@ export default {
         });
       }
     },
-    // 关闭查看弹窗
-    closeDialog() {
-      this.dialogVisible = false;
-    },
     // 打开添加弹窗
     handleCreate() {
       this.dialogStatus = "create";
@@ -217,10 +219,6 @@ export default {
     handleUpdate(row) {
       this.dialogStatus = "update";
       this.dialogForm = true;
-    },
-    // 关闭添加、修改弹窗
-    cancleClick() {
-      this.dialogForm = false;
     },
     // 删除客户档案信息
     handleDelete(row, index) {
@@ -271,4 +269,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.shelf-info {
+  height: 100%;
+  padding: 20px;
+}
 </style>

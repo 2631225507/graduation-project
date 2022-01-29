@@ -2,7 +2,7 @@
   <div class="shelf-info-detail">
     <el-dialog
       :title="title"
-      :visible.sync="dialogProductVisible"
+      :visible.sync="isShow"
       center
       width="60%"
       @close="closeDialog"
@@ -109,13 +109,13 @@ export default {
     },
   },
   watch: {
-    dialogVisible(newVal, oldVal) {
-      this.dialogProductVisible = newVal;
+    dialogVisible(newVal) {
+      this.isShow = newVal;
     },
   },
   data() {
     return {
-      dialogProductVisible: false, //外层弹窗
+      isShow: this.dialogVisible, //外层弹窗
       innerVisible: false, //内嵌弹窗
       productList: [
         {
@@ -147,7 +147,7 @@ export default {
     },
     // 关闭外层弹窗
     closeDialog() {
-      this.$emit("closeDialog");
+      this.$emit("update:dialogVisible",false);
     },
   },
 };
