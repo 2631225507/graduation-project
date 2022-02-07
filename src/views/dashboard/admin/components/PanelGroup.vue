@@ -22,7 +22,7 @@
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">一周订单总数</div>
+          <div class="card-panel-text">本周订单总数</div>
           <count-to
             :start-val="0"
             :end-val="81212"
@@ -54,7 +54,7 @@
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">一周销售总额</div>
+          <div class="card-panel-text">本周销售总额</div>
           <count-to
             :start-val="0"
             :end-val="13600"

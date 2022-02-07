@@ -1,135 +1,195 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
-import resize from './mixins/resize'
+import echarts from "echarts";
+require("echarts/theme/macarons");
+import resize from "./mixins/resize";
 
 export default {
   mixins: [resize],
   props: {
     className: {
       type: String,
-      default: 'chart'
+      default: "chart",
     },
     width: {
       type: String,
-      default: '100%'
+      default: "100%",
     },
     height: {
       type: String,
-      default: '350px'
+      default: "400px",
     },
     autoResize: {
       type: Boolean,
-      default: true
+      default: true,
     },
     chartData: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      chart: null
-    }
+      chart: null,
+    };
   },
   watch: {
     chartData: {
       deep: true,
       handler(val) {
-        this.setOptions(val)
-      }
-    }
+        this.setOptions(val);
+      },
+    },
   },
   mounted() {
     this.$nextTick(() => {
-      this.initChart()
-    })
+      this.initChart();
+    });
   },
   beforeDestroy() {
     if (!this.chart) {
-      return
+      return;
     }
-    this.chart.dispose()
-    this.chart = null
+    this.chart.dispose();
+    this.chart = null;
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData)
+      this.chart = echarts.init(this.$el, "macarons");
+      this.setOptions(this.chartData);
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ expectedData, actualData, AAAAA, BBBBB, CCCCC } = {}) {
       this.chart.setOption({
+        title: {
+          left: "center",
+          text: "该年度每月详情"
+        },
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: [
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月",
+          ],
           boundaryGap: false,
           axisTick: {
-            show: false
-          }
+            show: false,
+          },
         },
         grid: {
           left: 10,
-          right: 10,
+          right: 20,
           bottom: 20,
-          top: 30,
-          containLabel: true
+          top:55,
+          containLabel: true,
         },
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           axisPointer: {
-            type: 'cross'
+            type: "cross",
           },
-          padding: [5, 10]
+          padding: [5, 10],
         },
         yAxis: {
           axisTick: {
-            show: false
-          }
+            show: false,
+          },
         },
         legend: {
-          data: ['expected', 'actual']
+          top:25,
+          data: [
+            "总销售金额（万元）",
+            "成交订单总数（单）",
+            "入库单数（单）",
+            "入库总金额（万元）",
+          ],
         },
-        series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
+        series: [
+          {
+            name: "总销售金额（万元）",
+            itemStyle: {
+              normal: {
+                color: "#FF005A",
+                lineStyle: {
+                  color: "#FF005A",
+                  width: 2,
+                },
               },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
+            },
+            smooth: true,
+            type: "line",
+            data: expectedData,
+            animationDuration: 2800,
+            animationEasing: "cubicInOut",
           },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
-      })
-    }
-  }
-}
+          {
+            name: "成交订单总数（单）",
+            smooth: true,
+            type: "line",
+            itemStyle: {
+              normal: {
+                color: "#3888fa",
+                lineStyle: {
+                  color: "#3888fa",
+                  width: 2,
+                },
+                areaStyle: {
+                  color: "#f3f8ff",
+                },
+              },
+            },
+            data: actualData,
+            animationDuration: 2800,
+            animationEasing: "quadraticOut",
+          },
+          {
+            name: "入库单数（单）",
+            itemStyle: {
+              normal: {
+                color: "#FAC858",
+                lineStyle: {
+                  color: "#FAC858",
+                  width: 2,
+                },
+              },
+            },
+            smooth: true,
+            type: "line",
+            data: BBBBB,
+            animationDuration: 2800,
+            animationEasing: "cubicInOut",
+          },
+          {
+            name: "入库总金额（万元）",
+            itemStyle: {
+              normal: {
+                color: "#91CC75",
+                lineStyle: {
+                  color: "#91CC75",
+                  width: 2,
+                },
+              },
+            },
+            smooth: true,
+            type: "line",
+            data: AAAAA,
+            animationDuration: 2800,
+            animationEasing: "cubicInOut",
+          },
+        ],
+      });
+    },
+  },
+};
 </script>
