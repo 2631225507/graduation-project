@@ -57,16 +57,22 @@
           <span>{{ row.sex }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="手机号码" width="180px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.phone }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="入职时间" min-width="150px" align="center">
         <template slot-scope="{ row }">
           {{ row.create_time }}
         </template>
       </el-table-column>
+      <el-table-column label="职务" min-width="100px" align="center">
+        <template slot-scope="{ row }">
+          {{ row.lev }}
+        </template>
+      </el-table-column>
+      <el-table-column label="联系号码" width="250px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.phone }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="联系地址" align="center">
         <el-table-column
           prop="province"
@@ -113,7 +119,7 @@
       @pagination="getList"
     />
 
-      <!-- 添加修改 -->
+    <!-- 添加修改 -->
     <change-info
       v-if="dialogForm"
       :dialogStatus="dialogStatus"
@@ -123,13 +129,13 @@
 </template>
 
 <script>
-import { fetchList} from "@/api/article";
+import { fetchList } from "@/api/article";
 import ChangeInfo from "./change";
 import Pagination from "@/components/Pagination";
 
 export default {
   name: "StaffInfo",
-  components: { Pagination ,ChangeInfo},
+  components: { Pagination, ChangeInfo },
   data() {
     return {
       list: null, //表格数据
@@ -141,7 +147,7 @@ export default {
         limit: 10,
         name: undefined,
       },
-     
+
       multipleSelection: [], //表格勾选数据
       dialogForm: false, //添加编辑弹窗
       dialogStatus: "", //区分添加或修改弹窗
@@ -183,7 +189,7 @@ export default {
       this.dialogStatus = "create";
       this.dialogForm = true;
     },
-    
+
     // 打开修改弹窗
     handleUpdate(row) {
       this.dialogStatus = "update";

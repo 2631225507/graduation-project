@@ -24,6 +24,30 @@
             <el-radio border label="0">女</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="入职时间:" prop="entry_time">
+          <el-date-picker
+            v-model="staffInfo.entry_time"
+            type="datetime"
+            style="width: 100%"
+            placeholder="请选择入职时间"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="职务：" prop="level">
+          <el-select
+            v-model="staffInfo.level"
+            clearable
+            placeholder="请选择职务"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in levelOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="联系电话:" prop="phone">
           <el-input v-model="staffInfo.phone" placeholder="请输入联系电话" />
         </el-form-item>
@@ -33,19 +57,10 @@
             :options="addressOptions"
             v-model="staffInfo.address"
             :props="addressProps"
-            style="width: 300px"
+            style="width: 100%"
             clearable
             filterable
           ></el-cascader>
-        </el-form-item>
-        <el-form-item label="入职时间:" prop="entry_time">
-          <el-date-picker
-            v-model="staffInfo.entry_time"
-            type="datetime"
-            style="width: 300px"
-            placeholder="请选择入职时间"
-          >
-          </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -95,6 +110,7 @@ export default {
           { required: true, message: "请输入员工名称", trigger: "change" },
         ],
         sex: [{ required: true, message: "请选择性别", trigger: "change" }],
+        level: [{ required: true, message: "请选择职务", trigger: "change" }],
         phone: [{ required: true, trigger: "change", validator: validPhone }],
         address: [
           { required: true, message: "请选择联系地址", trigger: "change" },
@@ -148,6 +164,7 @@ export default {
         },
       ], //级联选择数据
       addressProps: {},
+      levelOptions: [],
     };
   },
   methods: {

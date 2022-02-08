@@ -44,39 +44,41 @@
     >
       <el-table-column
         prop="order_number"
-        fixed
-        label="商品编号"
-        width="200"
+        label="产品货号"
+        min-width="200"
         align="center"
       ></el-table-column>
       <el-table-column
         prop="c_name"
-        label="商品名称"
-        width="180"
+        label="产品名称"
+        min-width="150"
         align="center"
       >
       </el-table-column>
       <el-table-column
         prop="p_name"
-        label="商品类别"
+        label="产品类别"
         width="200"
         align="center"
       >
       </el-table-column>
-      <el-table-column
-        prop="order_time"
+      <el-table-column prop="detailed" label="尺码" width="150" align="center">
+      </el-table-column>
+      <el-table-column prop="time" label="库存" width="100" align="center">
+      </el-table-column>
+       <el-table-column
+        prop="price"
         label="发售价格"
         width="120"
         align="center"
       >
       </el-table-column>
-      <el-table-column prop="c_phone" label="颜色" width="145" align="center">
-      </el-table-column>
-      <el-table-column prop="detailed" label="尺码" width="200" align="center">
-      </el-table-column>
-      <el-table-column prop="sname" label="图例" width="100" align="center">
-      </el-table-column>
-      <el-table-column prop="time" label="库存" width="100" align="center">
+       <el-table-column
+        prop="order_time"
+        label="发售日期"
+        width="120"
+        align="center"
+      >
       </el-table-column>
       <el-table-column
         label="操作"
@@ -91,15 +93,13 @@
             size="mini"
             icon="el-icon-edit"
             @click="handleUpdate(row)"
-            >编辑</el-button
-          >
+            >编辑</el-button>
           <el-button
             type="danger"
             size="mini"
             icon="el-icon-delete"
             @click="handleDelete(row, $index)"
-            >删除</el-button
-          >
+            >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -154,55 +154,7 @@ export default {
           replenishment: null,
           sname: "黄河根",
           time: 1590916617000,
-        },
-        {
-          allnumber: 3000,
-          allprice: 30000,
-          area: "马尾区",
-          c_code_number: 5,
-          c_name: "客户001",
-          c_p_id: 469,
-          c_phone: "13500000001",
-          city: "福州市",
-          delivery_time: "2020-05-28 00:00:00",
-          detailed: "sss",
-          id: 69,
-          order_number: "BUGNHVCGYVDKDXBCC2323GWCIAAOKGZXSCTT",
-          order_time: "2020-05-27",
-          out_time: null,
-          outbound: "0",
-          p_name: "XC-8270",
-          p_number: 1000,
-          p_price: "10",
-          province: "福建省",
-          replenishment: null,
-          sname: "职员01",
-          time: 1590916617000,
-        },
-        {
-          allnumber: 100,
-          allprice: 2000,
-          area: "罗湖区",
-          c_code_number: 35,
-          c_name: "客户002",
-          c_p_id: 471,
-          c_phone: "13500000002",
-          city: "深圳市",
-          delivery_time: "2020-05-31 19:03:36",
-          detailed: "阳光学院",
-          id: 70,
-          order_number: "VPDSELPIYPXHLUIVVNNXTBSC",
-          order_time: "2020-04-30",
-          out_time: null,
-          outbound: "0",
-          p_name: "XW-XC-XY-8995",
-          p_number: 100,
-          p_price: "20",
-          province: "广东省",
-          replenishment: null,
-          sname: "职员004",
-          time: 1590923019000,
-        },
+        }
       ],
       total: 2, //表格总条数
       listLoading: true, //loading样式
