@@ -1,5 +1,7 @@
 <template>
   <div class="product-inventory">
+    <template>
+    </template>
     <pie-chart :chartData="pieChartData" />
   </div>
 </template>
