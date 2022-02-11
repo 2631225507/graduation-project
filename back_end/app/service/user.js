@@ -3,10 +3,15 @@
 const Service = require('egg').Service;
 
 class UserService extends Service {
-  async find(uid) {
-    const user = await this.ctx.db.query('select * from user where uid = ?', uid);
-    return user;
+  async find(id) {
+    try {
+      await ctx.model.User.findOne({ where: { id }});
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
+
 }
 
 module.exports = UserService;

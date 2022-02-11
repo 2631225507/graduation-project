@@ -18,10 +18,31 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [];
 
+  config.sequelize = {
+    dialect: 'mysql',
+    host: '127.0.0.1',
+    port: 3306,
+    username: 'root',
+    password: '123456',
+    database: 'backstage',
+    define: {
+      freezeTableName: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+    }
+  };
+  
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
   };
+
 
   return {
     ...config,
