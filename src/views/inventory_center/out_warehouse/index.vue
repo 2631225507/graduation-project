@@ -1,5 +1,5 @@
 <template>
-  <div class="out_warehouse">
+  <div class="out_warehouse" ref="out">
     <!-- 功能区 -->
     <div class="filter-container">
       <el-input
@@ -28,10 +28,11 @@
 
     <!-- 表格 -->
     <el-table
+      v-if="tableHeight"
       :data="tableData"
       :span-method="objectSpanMethod"
       border
-      style="width: 100%"
+      :height="tableHeight"
     >
       <el-table-column
         prop="order_number"
@@ -57,7 +58,6 @@
       <el-table-column
         prop="order_time"
         label="下单时间"
-        width="120"
         align="center"
       >
       </el-table-column>
@@ -108,7 +108,7 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="time" label="出库时间" width="100" align="center">
+      <el-table-column prop="time" label="出库时间" align="center">
       </el-table-column>
     </el-table>
 
@@ -131,6 +131,7 @@ export default {
   data() {
     return {
       value1: true,
+      tableHeight: "",
       tableData: [
         {
           allnumber: 3000,
@@ -155,55 +156,7 @@ export default {
           replenishment: null,
           sname: "黄河根",
           time: 1590916617000,
-        },
-        {
-          allnumber: 3000,
-          allprice: 30000,
-          area: "马尾区",
-          c_code_number: 5,
-          c_name: "客户001",
-          c_p_id: 469,
-          c_phone: "13500000001",
-          city: "福州市",
-          delivery_time: "2020-05-28 00:00:00",
-          detailed: "sss",
-          id: 69,
-          order_number: "BUGNHVCGYVDKDXBCC2323GWCIAAOKGZXSCTT",
-          order_time: "2020-05-27",
-          out_time: null,
-          outbound: "0",
-          p_name: "XC-8270",
-          p_number: 1000,
-          p_price: "10",
-          province: "福建省",
-          replenishment: null,
-          sname: "职员01",
-          time: 1590916617000,
-        },
-        {
-          allnumber: 100,
-          allprice: 2000,
-          area: "罗湖区",
-          c_code_number: 35,
-          c_name: "客户002",
-          c_p_id: 471,
-          c_phone: "13500000002",
-          city: "深圳市",
-          delivery_time: "2020-05-31 19:03:36",
-          detailed: "阳光学院",
-          id: 70,
-          order_number: "VPDSELPIYPXHLUIVVNNXTBSC",
-          order_time: "2020-04-30",
-          out_time: null,
-          outbound: "0",
-          p_name: "XW-XC-XY-8995",
-          p_number: 100,
-          p_price: "20",
-          province: "广东省",
-          replenishment: null,
-          sname: "职员004",
-          time: 1590923019000,
-        },
+        }
       ],
       total: 2, //表格总条数
       listLoading: true, //loading样式
@@ -296,6 +249,9 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) => filterVal.map((j) => v[j]));
     },
+  },
+  mounted() {
+    this.tableHeight = window.innerHeight - 188 - 55;
   },
 };
 </script>

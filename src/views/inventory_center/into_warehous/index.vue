@@ -19,6 +19,14 @@
       <el-button
         class="filter-item"
         type="primary"
+        icon="el-icon-plus"
+        style="margin-left: 10px"
+        @click="handleCreate"
+        >添加</el-button
+      >
+      <el-button
+        class="filter-item"
+        type="primary"
         icon="el-icon-download"
         :loading="downloadLoading"
         @click="handleDownload"
@@ -28,10 +36,11 @@
 
     <!-- 表格 -->
     <el-table
+      v-if="tableHeight"
       :data="tableData"
       :span-method="objectSpanMethod"
       border
-      style="width: 100%"
+      :height="tableHeight"
     >
       <el-table-column
         prop="order_number"
@@ -111,14 +120,21 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
+    <!-- 新增弹窗 -->
+     <change-info
+      :formVisible.sync="formVisible"
+      v-if="formVisible"
+      :state="state"
+    ></change-info>
   </div>
 </template>
 
 <script>
 import Pagination from "@/components/Pagination";
+import ChangeInfo from "./change";
 export default {
   name: "WarehousingManagement",
-  components: { Pagination },
+  components: { Pagination, ChangeInfo },
   data() {
     return {
       tableData: [
@@ -146,56 +162,10 @@ export default {
           sname: "黄河根",
           time: 1590916617000,
         },
-        {
-          allnumber: 3000,
-          allprice: 30000,
-          area: "马尾区",
-          c_code_number: 5,
-          c_name: "客户001",
-          c_p_id: 469,
-          c_phone: "13500000001",
-          city: "福州市",
-          delivery_time: "2020-05-28 00:00:00",
-          detailed: "sss",
-          id: 69,
-          order_number: "BUGNHVCGYVDKDXBCC2323GWCIAAOKGZXSCTT",
-          order_time: "2020-05-27",
-          out_time: null,
-          outbound: "0",
-          p_name: "XC-8270",
-          p_number: 1000,
-          p_price: "10",
-          province: "福建省",
-          replenishment: null,
-          sname: "职员01",
-          time: 1590916617000,
-        },
-        {
-          allnumber: 100,
-          allprice: 2000,
-          area: "罗湖区",
-          c_code_number: 35,
-          c_name: "客户002",
-          c_p_id: 471,
-          c_phone: "13500000002",
-          city: "深圳市",
-          delivery_time: "2020-05-31 19:03:36",
-          detailed: "阳光学院",
-          id: 70,
-          order_number: "VPDSELPIYPXHLUIVVNNXTBSC",
-          order_time: "2020-04-30",
-          out_time: null,
-          outbound: "0",
-          p_name: "XW-XC-XY-8995",
-          p_number: 100,
-          p_price: "20",
-          province: "广东省",
-          replenishment: null,
-          sname: "职员004",
-          time: 1590923019000,
-        },
       ],
+      tableHeight: "",
       total: 2, //表格总条数
+      formVisible: false, //添加修改弹窗
       listLoading: true, //loading样式
       listQuery: {
         //请求参数
@@ -206,12 +176,12 @@ export default {
       downloadLoading: false,
     };
   },
+  mounted() {
+    this.tableHeight = window.innerHeight - 188 - 55;
+  },
   methods: {
     // 合并行
     objectSpanMethod({ row, column, rowIndex }) {
-      // console.log("row", row);
-      // console.log("column", column);
-      // console.log("rowIndex", rowIndex);
       const dataProvider = this.tableData;
       const cellValue = row[column.property];
       if (cellValue) {
@@ -266,7 +236,15 @@ export default {
         // this.objectSpanMethod()
       });
     },
-    handleUpdate(row) {},
+    handleCreate() {
+      this.state = "create";
+      this.formVisible = true;
+    },
+    // 打开修改弹窗
+    handleUpdate(row) {
+      this.state = "update";
+      this.formVisible = true;
+    },
     // 导出EXCEL表格
     handleDownload() {
       if (this.multipleSelection.length) {
