@@ -12,7 +12,7 @@ class BaseController extends Controller {
 
   error(data) {
     this.ctx.body = {
-      code: 200,
+      code: "IOError",
       success: false,
       data,
     };

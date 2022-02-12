@@ -8,7 +8,7 @@ class UserService extends Service {
     password = md5(md5(password) + app.config.password_salt);
 
     const user = await ctx.model.User.findOne({
-      where: { username },
+      where: { username, password },
     });
 
     if (!user) {

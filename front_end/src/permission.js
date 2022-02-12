@@ -25,27 +25,26 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
       NProgress.done()// 关闭进度条
     } else {
-      // determine whether the user has obtained his permission roles through getInfo
+      // 确定用户是否已通过getInfo获得其权限角色
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
-      next()
+        next()
       } else {
         try {
-          // get user info
-          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          // 获取用户信息,角色必须是数组(['admin'] or ,['developer','editor'])
           const { roles } = await store.dispatch('user/getInfo')
 
-          // generate accessible routes map based on roles
+          // 根据角色生成可访问的路径
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
-          // dynamically add accessible routes
+          // 动态添加可访问的路由
           router.addRoutes(accessRoutes)
 
-          // hack method to ensure that addRoutes is complete
-          // set the replace: true, so the navigation will not leave a history record
+          //黑客方法，以确保addRoutes是完整的
+          //设置replace:true，这样导航就不会留下历史记录
           next({ ...to, replace: true })
         } catch (error) {
-          // remove token and go to login page to re-login
+          // 删除令牌并转到登录页面重新登录
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
@@ -54,15 +53,10 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    /* has no token*/
-
     if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {
       next(`/login`)
-
-      // other pages that do not have permission to access are redirected to the login page.
-      // next(`/login?redirect=${to.path}`)
       NProgress.done()
     }
   }
