@@ -9,7 +9,7 @@ export default {
     }
   },
   render: function(h) {
-    return h() // avoid warning message
+    return h() 
   }
 }
 </script>

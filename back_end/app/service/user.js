@@ -3,13 +3,26 @@
 const Service = require('egg').Service;
 
 class UserService extends Service {
-  async find(id) {
-    try {
-      await ctx.model.User.findOne({ where: { id }});
-      return true;
-    } catch (error) {
+  async login({ username, password }) {
+    const { app, ctx } = this;
+    password = md5(md5(password) + app.config.password_salt);
+
+    const user = await ctx.model.User.findOne({
+      where: { username },
+    });
+
+    if (!user) {
       return false;
     }
+
+    if (user.password === password) {
+      const token = app.jwt.sign({
+        userid: user.id,
+        username: user.username
+      }, app.config.jwt.secret, { expiresIn: 60 * 60 * 24 * 7 });
+      return token;
+    }
+    return false;
   }
 
 }
