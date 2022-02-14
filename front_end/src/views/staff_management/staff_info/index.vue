@@ -164,16 +164,16 @@ export default {
   methods: {
     // 获取客户档案信息数据
     getList() {
-      this.listLoading = true;
-      fetchList(this.listQuery).then((response) => {
-        this.list = response.data.items;
-        this.total = response.data.total;
+      // this.listLoading = true;
+      // fetchList(this.listQuery).then((response) => {
+      //   this.list = response.data.items;
+      //   this.total = response.data.total;
 
-        // 模拟请求的时间
-        setTimeout(() => {
+      //   // 模拟请求的时间
+      //   setTimeout(() => {
           this.listLoading = false;
-        }, 1.5 * 1000);
-      });
+      //   }, 1.5 * 1000);
+      // });
     },
     // 查询数据
     handleFilter() {
