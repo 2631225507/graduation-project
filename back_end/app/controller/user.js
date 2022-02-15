@@ -25,7 +25,7 @@ class UserController extends Controller {
                 code: 200,
                 success: true,
                 data: {
-                    avatar: "https://img1.baidu.com/it/u=2698029976,2718168151&fm=253&fmt=auto&app=120&f=JPEG?w=519&h=500",
+                    avatar: "https://img.zcool.cn/community/00adaf5b3a167aa80121b994702514.jpg@80w_80h_1c_1e_1o_100sh.jpg",
                     introduction: "我是超级管理员",
                     name: "超级管理员", 
                     roles: ["admin"]

@@ -7,6 +7,7 @@ export function login(data) {
         data
     })
 }
+
 export function getInfo(data) {
     return service({
         url: '/api/user/info',

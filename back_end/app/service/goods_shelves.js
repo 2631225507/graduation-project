@@ -26,6 +26,8 @@ class GoodsShelvesService extends Service {
     // 添加货架信息
     async create(body) {
         const { ctx } = this
+        body.shelf_number = body.area_code + body.secondary_code + '-' + body.number_layers
+        body.access_box = 0
         try {
             await ctx.model.GoodsShelves.create(body)
             return true
@@ -37,11 +39,12 @@ class GoodsShelvesService extends Service {
     // 修改货架信息
     async update(body) {
         const { ctx } = this;
+        body.shelf_number = body.area_code + body.secondary_code + '-' + body.number_layers
         body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         try {
             return await ctx.model.GoodsShelves.update(body, {
                 where: {
-                    shelf_id: body.id,
+                    shelf_id: body.shelf_id,
                 },
             });
         } catch (error) {
@@ -51,20 +54,20 @@ class GoodsShelvesService extends Service {
     }
 
     // 删除货架信息
-    async delete(body) {
+    async delete({ shelf_id }) {
         const { ctx } = this;
         try {
-          await ctx.model.GoodsShelves.destroy({
-            where: {
-                shelf_id: body.id,
-            },
-          });
-          return { success: true };
+            await ctx.model.GoodsShelves.destroy({
+                where: {
+                    shelf_id,
+                },
+            });
+            return { success: true };
         } catch (error) {
-          console.log(error);
-          return { success: false };
+            console.log(error);
+            return { success: false };
         }
-      }
+    }
 }
 
 module.exports = GoodsShelvesService;

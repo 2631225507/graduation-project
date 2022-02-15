@@ -12,7 +12,12 @@ class GoodsShelvesController extends Controller {
             page: { type: 'string', required: true }
         }, ctx.query)
 
-        ctx.body = await ctx.service.goodsShelves.page(query)
+        const res = await ctx.service.goodsShelves.page(query)
+        if (res) {
+            ctx.body = { code: 200, msg: '查询成功', data: res }
+        } else {
+            ctx.body = { code: IOError, msg: '查询失败', data: [] }
+        }
     }
 
     // 添加货架信息
@@ -21,9 +26,9 @@ class GoodsShelvesController extends Controller {
         const body = ctx.request.body
         const res = await ctx.service.goodsShelves.create(body)
         if (res) {
-            ctx.body = { success: true, msg: '添加成功' }
+            this.success('添加成功');
         } else {
-            ctx.body = { success: false, msg: '添加失败' }
+            this.error('添加失败');
         }
     }
 
@@ -31,10 +36,6 @@ class GoodsShelvesController extends Controller {
     async update() {
         const { ctx } = this;
         const body = ctx.request.body;
-
-        ctx.validate({
-            id: { type: 'integer', required: true },
-        }, body);
 
         const res = await ctx.service.goodsShelves.update(body);
         if (res) {
@@ -48,10 +49,6 @@ class GoodsShelvesController extends Controller {
     async delete() {
         const { ctx } = this;
         const body = ctx.request.body;
-
-        ctx.validate({
-            id: { type: 'integer', required: true },
-        }, body);
 
         const res = await ctx.service.goodsShelves.delete(body);
         if (res.success) {

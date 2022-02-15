@@ -4,8 +4,8 @@
     <div class="filter-container">
       <el-input
         class="filter-item"
-        v-model="listQuery.name"
-        placeholder="请输入区代号"
+        v-model="listQuery.shelf_number"
+        placeholder="请输入货架号"
         style="width: 200px"
         @keyup.enter.native="handleFilter"
       />
@@ -36,49 +36,48 @@
 
     <!-- 表格数据 -->
     <el-table
-      ref="multipleTable"
-      style="width: 100%"
-      v-loading="listLoading"
       v-if="tableHeight"
+      ref="multipleTable"
       :data="list"
       :height="tableHeight"
       border
-      fit
-      highlight-current-row
+      @selection-change="handleSelectionChange"
     >
-      <el-table-column label="区代号" prop="code" align="center" width="100">
+      <el-table-column type="selection" align="center" />
+      <el-table-column label="区代号" align="center" width="150">
         <template slot-scope="{ row }">
-          <span>{{ row.code }}</span>
+          <span>{{ row.area_code }}</span>
         </template>
       </el-table-column>
       <el-table-column label="二级代号" align="center" width="150">
         <template slot-scope="{ row }">
-          <span>{{ row.code_number }}</span>
+          <span>{{ row.secondary_code }}</span>
         </template>
       </el-table-column>
       <el-table-column label="货架层数" width="150px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.number }}</span>
+          <span>{{ row.number_layers }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="添加时间" width="150px" align="center">
+      <el-table-column label="货架号" width="250px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.time }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="货架号" width="150px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.goods_shelves }}</span>
+          <span>{{ row.shelf_number }}</span>
         </template>
       </el-table-column>
       <el-table-column label="已存箱数" min-width="150px" align="center">
         <template slot-scope="{ row }">
           <span class="link-type" @click="handleDetail(row)">
-            {{ row.p_sum }}
+            {{ row.access_box }}
           </span>
         </template>
       </el-table-column>
-
+      <el-table-column label="创建时间" min-width="150px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{
+            row.created_at.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "")
+          }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         align="center"
@@ -125,12 +124,13 @@
       v-if="dialogForm"
       :dialogStatus="dialogStatus"
       :dialogForm.sync="dialogForm"
+      :editData="editData"
     ></change-info>
   </div>
 </template>
 
 <script>
-import { fetchList, createArticle, updateArticle } from "@/api/article";
+import { getShelvesInfo, shelvesDelete } from "@/api/goods-shelves";
 import DetailInfo from "./detail";
 import ChangeInfo from "./change";
 import Pagination from "@/components/Pagination";
@@ -139,33 +139,16 @@ export default {
   components: { Pagination, DetailInfo, ChangeInfo },
   data() {
     return {
-      list: [
-        {
-          code: 1,
-          code_number: "张三",
-          number: "13110653931",
-          time: "福建省",
-          goods_shelves: "福州市",
-          p_sum: "0",
-        },
-        {
-          code: 2,
-          code_number: "；isj",
-          number: "13110653931",
-          time: "福11建省",
-          goods_shelves: "11",
-          p_sum: "2",
-        },
-      ],
-      total: 2, //表格总条数
-      listLoading: true, //loading样式
+      list: [], //表格数据
+      total: 0, //表格总条数
       listQuery: {
         //请求参数
         page: 1,
         limit: 10,
-        name: undefined,
+        shelf_number: undefined,
       },
-      tableHeight: "",
+      editData: {}, //编辑数据
+      tableHeight: "", //表格高度
       multipleSelection: [], //表格勾选数据
       downloadLoading: false,
       dialogVisible: false, //查看详情弹窗
@@ -181,17 +164,12 @@ export default {
     this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
-    // 获取客户档案信息数据
+    // 获取货架数据数据
     getList() {
-      // this.listLoading = true;
-      // fetchList(this.listQuery).then((response) => {
-      //   this.list = response.data.items;
-      //   this.total = response.data.total;
-      //   // 模拟请求的时间
-      setTimeout(() => {
-        this.listLoading = false;
-      }, 1.5 * 1000);
-      // });
+      getShelvesInfo(this.listQuery).then((res) => {
+        this.list = res.data.rows;
+        this.total = res.data.count;
+      });
     },
     // 查询数据
     handleFilter() {
@@ -200,8 +178,9 @@ export default {
     },
     // 查看详情
     handleDetail(row) {
-      if (row.p_sum > 0) {
-        this.detailTitle = row.goods_shelves + "货架存放的产品";
+      // 已存箱数需大于0才能查看
+      if (row.access_box > 0) {
+        this.detailTitle = row.shelf_number + "货架存放的产品";
         this.dialogVisible = true;
       } else {
         this.$message({
@@ -217,38 +196,77 @@ export default {
     },
     // 打开修改弹窗
     handleUpdate(row) {
-      this.dialogStatus = "update";
-      this.dialogForm = true;
+      if (row.access_box > 0) {
+        this.$message({
+          message: "当前货架已存放产品，请先移除，在进行编辑",
+          type: "warning",
+        });
+      } else {
+        this.dialogStatus = "update";
+        this.dialogForm = true;
+        this.editData = row;
+      }
     },
     // 删除客户档案信息
     handleDelete(row, index) {
-      this.$confirm(`是否继续删除区代号为【${row.code}】的信息?`, "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.list.splice(index, 1);
+      this.$confirm(
+        `是否继续删除货架号为【${row.shelf_number}】的信息?`,
+        "删除",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(() => {
+        shelvesDelete(row).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: "success",
+              message: "删除成功！",
+              duration: 5000,
+            });
+            this.getList();
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败!",
+              duration: 5000,
+            });
+          }
+        });
       });
+    },
+    // 获取选中数据
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     },
     // 导出EXCEL表格
     handleDownload() {
       if (this.multipleSelection.length) {
         this.downloadLoading = true;
         import("@/vendor/Export2Excel").then((excel) => {
-          const tHeader = ["Id", "Title", "Author", "Readings", "Date"];
+          const tHeader = [
+            "区代号",
+            "二级代号",
+            "货架层数",
+            "货架号",
+            "已存取箱数",
+            "创建时间",
+          ];
           const filterVal = [
-            "id",
-            "title",
-            "author",
-            "pageviews",
-            "display_time",
+            "area_code",
+            "secondary_code",
+            "number_layers",
+            "shelf_number",
+            "access_box",
+            "created_at",
           ];
           const list = this.multipleSelection;
           const data = this.formatJson(filterVal, list);
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: "客户档案信息",
+            filename: "货架信息",
           });
           this.$refs.multipleTable.clearSelection();
           this.downloadLoading = false;
