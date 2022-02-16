@@ -1,41 +1,26 @@
-/* indent size: 2 */
+'use strict';
 
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
 
-  const Model = app.model.define('enum', {
+  const Enum = app.model.define('enum', {
     id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
       primaryKey: true
     },
     lable: {
-      type: DataTypes.STRING(32),
-      allowNull: true
-    },
-    value: {
-      type: DataTypes.INTEGER(11),
+      type: STRING(32),
       allowNull: true
     },
     type: {
-      type: DataTypes.STRING(32),
-      allowNull: true
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    updated_at: {
-      type: DataTypes.DATE,
+      type: STRING(32),
       allowNull: true
     }
   }, {
-    tableName: 'enum'
+    createdAt: false,
+    updatedAt: false,
   });
 
-  Model.associate = function() {
-
-  }
-
-  return Model;
+  return Enum;
 };

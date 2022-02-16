@@ -6,7 +6,7 @@ const Controller = require('egg').Controller;
 * @controller Province省份
 */
 class Province extends Controller {
-  
+
   /**
 * @summary 查询省份
 * @description 查询所有省份数据
@@ -15,7 +15,12 @@ class Province extends Controller {
 */
   async find() {
     const { ctx } = this;
-    ctx.body = await ctx.service.province.find();
+    const res = await ctx.service.province.find();
+    if (res) {
+      ctx.body = { code: 200, msg: '查询成功', data: res }
+    } else {
+      ctx.body = { code: IOError, msg: '查询失败' }
+    }
   }
 
 }

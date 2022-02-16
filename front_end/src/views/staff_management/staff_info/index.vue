@@ -3,7 +3,7 @@
     <!--功能区 -->
     <div class="filter-container">
       <el-input
-        v-model="listQuery.title"
+        v-model="listQuery.staff_name"
         placeholder="请输入员工名称"
         style="width: 200px"
         class="filter-item"
@@ -36,40 +36,32 @@
 
     <!-- 表格数据 -->
     <el-table
-      ref="multipleTable"
       v-if="tableHeight"
-      v-loading="listLoading"
+      ref="multipleTable"
       :height="tableHeight"
       :data="list"
       border
-      fit
-      highlight-current-row
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" />
       <el-table-column label="员工名称" align="center" width="150">
         <template slot-scope="{ row }">
-          <span>{{ row.name }}</span>
+          <span>{{ row.staff_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="性别" width="80px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.sex }}</span>
+          <span>{{ row.sex == "1" ? "男" : "女" }}</span>
         </template>
       </el-table-column>
       <el-table-column label="入职时间" min-width="150px" align="center">
         <template slot-scope="{ row }">
-          {{ row.create_time }}
-        </template>
-      </el-table-column>
-      <el-table-column label="职务" min-width="100px" align="center">
-        <template slot-scope="{ row }">
-          {{ row.lev }}
+          {{ row.entry_time.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "") }}
         </template>
       </el-table-column>
       <el-table-column label="联系号码" width="250px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.phone }}</span>
+          <span>{{ row.staff_phone }}</span>
         </template>
       </el-table-column>
 
@@ -124,12 +116,13 @@
       v-if="dialogForm"
       :dialogStatus="dialogStatus"
       :dialogForm.sync="dialogForm"
+      :editData="editData"
     ></change-info>
   </div>
 </template>
 
 <script>
-import { fetchList } from "@/api/article";
+import { getStaffInfo, staffDelete } from "@/api/staff";
 import ChangeInfo from "./change";
 import Pagination from "@/components/Pagination";
 
@@ -140,19 +133,18 @@ export default {
     return {
       list: null, //表格数据
       total: 0, //表格总条数
-      listLoading: true, //loading样式
       listQuery: {
         //请求参数
         page: 1,
         limit: 10,
-        name: undefined,
+        staff_name: undefined,
       },
-
       multipleSelection: [], //表格勾选数据
       dialogForm: false, //添加编辑弹窗
+      editData: {}, //编辑数据
       dialogStatus: "", //区分添加或修改弹窗
       downloadLoading: false,
-      tableHeight: "",
+      tableHeight: "", //表格高度
     };
   },
   created() {
@@ -162,18 +154,12 @@ export default {
     this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
-    // 获取客户档案信息数据
+    // 获取员工信息数据
     getList() {
-      // this.listLoading = true;
-      // fetchList(this.listQuery).then((response) => {
-      //   this.list = response.data.items;
-      //   this.total = response.data.total;
-
-      //   // 模拟请求的时间
-      //   setTimeout(() => {
-          this.listLoading = false;
-      //   }, 1.5 * 1000);
-      // });
+      getStaffInfo(this.listQuery).then((res) => {
+        this.list = res.data.rows;
+        this.total = res.data.count;
+      });
     },
     // 查询数据
     handleFilter() {
@@ -189,20 +175,39 @@ export default {
       this.dialogStatus = "create";
       this.dialogForm = true;
     },
-
     // 打开修改弹窗
     handleUpdate(row) {
       this.dialogStatus = "update";
       this.dialogForm = true;
+      this.editData = row;
     },
     // 删除客户档案信息
     handleDelete(row, index) {
-      this.$confirm(`是否继续删除客户名称为【${row.name}】的信息?`, "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.list.splice(index, 1);
+      this.$confirm(
+        `是否继续删除员工名称为【${row.staff_name}】的信息?`,
+        "删除",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(() => {
+        staffDelete(row).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: "success",
+              message: "删除成功！",
+              duration: 5000,
+            });
+            this.getList();
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败!",
+              duration: 5000,
+            });
+          }
+        });
       });
     },
     // 导出EXCEL表格
@@ -210,20 +215,32 @@ export default {
       if (this.multipleSelection.length) {
         this.downloadLoading = true;
         import("@/vendor/Export2Excel").then((excel) => {
-          const tHeader = ["Id", "Title", "Author", "Readings", "Date"];
+          const tHeader = [
+            "员工姓名",
+            "性别",
+            "员工号码",
+            "职务",
+            "省",
+            "市",
+            "区",
+            "入职时间",
+          ];
           const filterVal = [
-            "id",
-            "title",
-            "author",
-            "pageviews",
-            "display_time",
+            "staff_name",
+            "sex",
+            "staff_phone",
+            "duties",
+            "province",
+            "city",
+            "area",
+            "entry_time",
           ];
           const list = this.multipleSelection;
           const data = this.formatJson(filterVal, list);
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: "客户档案信息",
+            filename: "员工信息",
           });
           this.$refs.multipleTable.clearSelection();
           this.downloadLoading = false;

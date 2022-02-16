@@ -9,7 +9,12 @@ class City extends Controller {
     ctx.validate({
       code: { type: 'string', required: true },
     }, ctx.query)
-    ctx.body = await ctx.service.city.find(code);
+    const res = await ctx.service.city.find(code);
+    if (res) {
+      ctx.body = { code: 200, msg: '查询成功', data: res }
+    } else {
+      ctx.body = { code: IOError, msg: '查询失败' }
+    }
   }
 
 }

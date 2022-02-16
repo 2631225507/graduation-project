@@ -1,77 +1,56 @@
-/* indent size: 2 */
+'use strict';
 
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER,DATE }= app.Sequelize;
 
-  const Model = app.model.define('staff', {
+  const Staff = app.model.define('staff', {
     staff_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     staff_name: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     sex: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     staff_phone: {
-      type: DataTypes.STRING(32),
-      allowNull: true
-    },
-    duties_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: true
-    },
-    duties: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     province_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     province: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     city_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     city: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     area_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     area: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     entry_time: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    updated_at: {
-      type: DataTypes.DATE,
+      type: DATE,
       allowNull: true
     }
-  }, {
-    tableName: 'staff'
   });
 
-  Model.associate = function() {
-
-  }
-
-  return Model;
+  return Staff;
 };
