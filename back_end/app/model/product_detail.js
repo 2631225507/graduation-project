@@ -1,33 +1,36 @@
-/* indent size: 2 */
+'use strict';
 
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER, DECIMAL } = app.Sequelize;
 
-  const Model = app.model.define('product_detail', {
+  const ProductDetail = app.model.define('product_detail', {
     detail_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
-    product_id: {
-      type: DataTypes.INTEGER(11),
+    product_number: {
+      type: STRING(32),
       allowNull: true
     },
     size: {
-      type: "DOUBLE",
+      type: INTEGER(11),
       allowNull: true
     },
     stock: {
-      type: DataTypes.STRING(100),
+      type: STRING(100),
       allowNull: true
     }
   }, {
-    tableName: 'product_detail'
+    createdAt: false,
+    updatedAt: false,
   });
 
-  Model.associate = function() {
+  
+  ProductDetail.associate = function () {
+    ProductDetail.belongsTo(app.model.Product,  {foreignKey: 'product_number', targetKey: 'product_number'})
+}
 
-  }
-
-  return Model;
+  return ProductDetail;
 };

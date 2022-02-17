@@ -1,45 +1,36 @@
-/* indent size: 2 */
+'use strict';
 
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
 
-  const Model = app.model.define('product', {
+  const Product = app.model.define('product', {
     product_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     product_number: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     product_name: {
-      type: DataTypes.STRING(100),
+      type: STRING(100),
       allowNull: true
     },
     type: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     price: {
-      type: DataTypes.DECIMAL,
-      allowNull: true
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    updated_at: {
-      type: DataTypes.DATE,
+      type: INTEGER(20),
       allowNull: true
     }
-  }, {
-    tableName: 'product'
   });
 
-  Model.associate = function() {
+  Product.associate = function () {
+    Product.hasMany(app.model.ProductDetail, { foreignKey: 'product_number', sourceKey: 'product_number'});
+}
 
-  }
-
-  return Model;
+  return Product;
 };

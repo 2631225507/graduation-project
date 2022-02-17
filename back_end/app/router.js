@@ -25,5 +25,10 @@ module.exports = app => {
   router.post('/api/staff/update',  controller.staff.update); //修改员工信息
   router.post('/api/staff/delete',  controller.staff.delete); //删除员工信息
 
+  router.get('/api/productInfo',  controller.product.page); //获取产品信息
+  router.post('/api/product/create',  controller.product.create); //添加产品信息
+  router.post('/api/product/update',  controller.product.update); //修改产品信息
+  router.post('/api/product/delete',  controller.product.delete); //删除产品信息
+  router.post('/api/product-datail/delete',  controller.product.deleteDetail); //删除产品详情信息
 
 };

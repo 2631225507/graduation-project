@@ -4,7 +4,7 @@
     <div class="filter-container">
       <el-input
         class="filter-item"
-        v-model="listQuery.name"
+        v-model="listQuery.product_name"
         placeholder="请输入商品名称"
         style="width: 200px"
         @keyup.enter.native="handleFilter"
@@ -43,42 +43,26 @@
       style="width: 100%"
     >
       <el-table-column
-        prop="order_number"
-        label="产品货号"
+        prop="product_number"
+        label="产品编号"
         min-width="200"
         align="center"
       ></el-table-column>
-      <el-table-column
-        prop="c_name"
-        label="产品名称"
-        min-width="150"
-        align="center"
-      >
+      <el-table-column label="产品名称" min-width="150" align="center">
+        <template slot-scope="{ row }">
+          <span class="link-type" @click="handleDetail(row)">
+            {{ row.product_name }}
+          </span>
+        </template>
       </el-table-column>
-      <el-table-column
-        prop="p_name"
-        label="产品类别"
-        width="200"
-        align="center"
-      >
+      <el-table-column prop="type" label="产品类别" width="200" align="center">
       </el-table-column>
-      <el-table-column prop="detailed" label="尺码" width="150" align="center">
+      <el-table-column prop="price" label="单价" width="120" align="center">
       </el-table-column>
-      <el-table-column prop="time" label="库存" width="100" align="center">
-      </el-table-column>
-       <el-table-column
-        prop="price"
-        label="发售价格"
-        width="120"
-        align="center"
-      >
-      </el-table-column>
-       <el-table-column
-        prop="order_time"
-        label="发售日期"
-        width="120"
-        align="center"
-      >
+      <el-table-column label="上架日期" min-width="120" align="center">
+        <template slot-scope="{ row }">
+          {{ row.created_at.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "") }}
+        </template>
       </el-table-column>
       <el-table-column
         label="操作"
@@ -93,13 +77,15 @@
             size="mini"
             icon="el-icon-edit"
             @click="handleUpdate(row)"
-            >编辑</el-button>
+            >编辑</el-button
+          >
           <el-button
             type="danger"
             size="mini"
             icon="el-icon-delete"
             @click="handleDelete(row, $index)"
-            >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -117,55 +103,44 @@
       v-if="dialogForm"
       :dialogStatus="dialogStatus"
       :dialogForm.sync="dialogForm"
+      :editData="editData"
     ></change-info>
+
+    <!-- 详情 -->
+    <detail-info
+      v-if="dialogVisible"
+      :title="detailTitle"
+      :list="list"
+      :dialogVisible.sync="dialogVisible"
+    ></detail-info>
   </div>
 </template>
 
 <script>
+import { getProductInfo, productDelete } from "@/api/product";
 import Pagination from "@/components/Pagination";
 import ChangeInfo from "./change";
+import DetailInfo from "./detail";
 export default {
-  name: "WarehousingManagement",
-  components: { Pagination, ChangeInfo },
+  name: "CodeNumber",
+  components: { Pagination, ChangeInfo, DetailInfo },
   data() {
     return {
       value1: true,
-      tableData: [
-        {
-          allnumber: 3000,
-          allprice: 30000,
-          area: "马尾区",
-          c_code_number: 35.5,
-          c_name: "四创科技有限公司黄河根",
-          c_p_id: 470,
-          c_phone: "13500000001",
-          city: "福州市",
-          delivery_time: "2020-05-28 00:00:00",
-          detailed: "阳光学院菜鸟驿站",
-          id: 69,
-          order_number: "BUGNHVCGYVDKDXBC",
-          order_time: "2020-05-27",
-          out_time: null,
-          outbound: "0",
-          p_name: "安踏霸道系列-1.27",
-          p_number: 100000,
-          p_price: "1110",
-          province: "福建省",
-          replenishment: null,
-          sname: "黄河根",
-          time: 1590916617000,
-        }
-      ],
-      total: 2, //表格总条数
-      listLoading: true, //loading样式
+      tableData: [],
+      total: 0, //表格总条数
       listQuery: {
         //请求参数
         page: 1,
         limit: 10,
-        name: undefined,
+        product_name: undefined,
       },
+      detailTitle: "详情",
+      list: [],
+      editData:{},
       dialogForm: false, //添加修改弹窗
       dialogStatus: "", //添加修改弹窗标题
+      dialogVisible: false, //产品详情弹窗
       downloadLoading: false,
       tableHeight: "",
     };
@@ -178,32 +153,94 @@ export default {
   },
   methods: {
     // 获取入库信息
-    getList() {},
+    getList() {
+      getProductInfo(this.listQuery).then((res) => {
+        this.tableData = res.data.rows;
+        this.total = this.tableData.length
+      });
+    },
     // 查询数据
     handleFilter() {
       this.listQuery.page = 1;
       this.getList();
     },
-    handleUpdate(row) {},
+    // 打开添加弹窗
+    handleCreate() {
+      this.dialogStatus = "create";
+      this.dialogForm = true;
+    },
+    // 打开修改弹窗
+    handleUpdate(row) {
+      console.log(row);
+      this.dialogStatus = "update";
+      this.dialogForm = true;
+      this.editData = row;
+    },
+    // 打开产品详情弹窗
+    handleDetail(row) {
+      this.list = { ...row };
+      this.detailTitle = row.product_name + "详情";
+      this.dialogVisible = true;
+    },
+    // 删除客户档案信息
+    handleDelete(row, index) {
+      this.$confirm(
+        `是否继续删除产品名称为【${row.product_name}】的信息?`,
+        "删除",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(() => {
+        productDelete(row).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: "success",
+              message: "删除成功！",
+              duration: 5000,
+            });
+            this.getList();
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败!",
+              duration: 5000,
+            });
+          }
+        });
+      });
+    },
     // 导出EXCEL表格
     handleDownload() {
       if (this.multipleSelection.length) {
         this.downloadLoading = true;
         import("@/vendor/Export2Excel").then((excel) => {
-          const tHeader = ["Id", "Title", "Author", "Readings", "Date"];
+          const tHeader = [
+            "产品编号",
+            "产品名称",
+            "产品类别",
+            "尺码",
+            "库存",
+            "单价",
+            "上架日期",
+          ];
           const filterVal = [
-            "id",
-            "title",
-            "author",
-            "pageviews",
-            "display_time",
+            "product_number",
+            "product_name",
+            "type",
+            "price",
+            "product_name",
+            "size",
+            "stock",
+            "created_at",
           ];
           const list = this.multipleSelection;
           const data = this.formatJson(filterVal, list);
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: "出库信息",
+            filename: "产品清单",
           });
           this.$refs.multipleTable.clearSelection();
           this.downloadLoading = false;
@@ -218,26 +255,6 @@ export default {
     //数据格式转换
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) => filterVal.map((j) => v[j]));
-    },
-    // 打开添加弹窗
-    handleCreate() {
-      this.dialogStatus = "create";
-      this.dialogForm = true;
-    },
-    // 打开修改弹窗
-    handleUpdate(row) {
-      this.dialogStatus = "update";
-      this.dialogForm = true;
-    },
-    // 删除客户档案信息
-    handleDelete(row, index) {
-      this.$confirm(`是否继续删除区代号为【${row.code}】的信息?`, "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.list.splice(index, 1);
-      });
     },
   },
 };
