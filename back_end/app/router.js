@@ -31,4 +31,10 @@ module.exports = app => {
   router.post('/api/product/delete',  controller.product.delete); //删除产品信息
   router.post('/api/product-datail/delete',  controller.product.deleteDetail); //删除产品详情信息
 
+  router.get('/api/customerInfo',  controller.customer.page); //获取客户信息
+  router.post('/api/customer/create',  controller.customer.create); //添加客户信息
+  router.post('/api/customer/update',  controller.customer.update); //修改产品信息
+  router.post('/api/customer/delete',  controller.customer.delete); //删除产品信息
+
+
 };

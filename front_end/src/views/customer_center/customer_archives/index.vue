@@ -4,7 +4,7 @@
     <div class="filter-container">
       <el-input
         class="filter-item"
-        v-model="listQuery.name"
+        v-model="listQuery.customer_name"
         placeholder="请输入客户名称"
         style="width: 200px"
         @keyup.enter.native="handleFilter"
@@ -38,7 +38,6 @@
     <el-table
       v-if="tableHeight"
       ref="multipleTable"
-      v-loading="listLoading"
       :data="list"
       :height="tableHeight"
       border
@@ -49,17 +48,17 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="客户名称" align="center" width="150">
         <template slot-scope="{ row }">
-          <span>{{ row.name }}</span>
+          <span>{{ row.customer_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="联系电话" width="150px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.phone }}</span>
+          <span>{{ row.customer_phone }}</span>
         </template>
       </el-table-column>
       <el-table-column label="销售产品" min-width="150px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.produce_name }}</span>
+          <span>{{ row.promoting_products }}</span>
         </template>
       </el-table-column>
       <el-table-column label="联系地址" align="center">
@@ -118,16 +117,17 @@
 
     <!-- 添加、修改弹窗 -->
     <change-info
+      v-if="formVisible"
       :formVisible.sync="formVisible"
       :state="state"
-      v-if="formVisible"
+      :editData="editData"
     ></change-info>
   </div>
 </template>
 
 <script>
 import ChangeInfo from "./change";
-import { fetchList } from "@/api/article";
+import { getCustomerInfo, customerDelete } from "@/api/customer";
 import Pagination from "@/components/Pagination";
 export default {
   name: "CustomerProfileInfo",
@@ -138,15 +138,15 @@ export default {
       list: [],
       tableHeight: "",
       total: 0, //表格数据条数
-      listLoading: true, //表格数据加载样式
       listQuery: {
         //请求参数
         page: 1,
         limit: 10,
-        name: "",
+        customer_name: undefined,
       },
       multipleSelection: [], //勾选数据
       formVisible: false, //添加修改弹窗
+      editData: {}, //编辑数据
       state: "",
       downloadLoading: false,
     };
@@ -160,11 +160,10 @@ export default {
   methods: {
     // 获取客户档案信息数据
     getList() {
-      // 模拟请求的时间
-      setTimeout(() => {
-        this.listLoading = false;
-      }, 1.5 * 1000);
-      // });
+      getCustomerInfo(this.listQuery).then((res) => {
+        this.list = res.data.rows;
+        this.total = res.data.count;
+      });
     },
     // 查询数据
     handleFilter() {
@@ -182,18 +181,37 @@ export default {
     },
     // 打开修改弹窗
     handleUpdate(row) {
-      this.clientInfo = Object.assign({}, row);
+      this.editData = Object.assign({}, row);
       this.state = "update";
       this.formVisible = true;
     },
     // 删除客户档案信息
     handleDelete(row, index) {
-      this.$confirm(`是否继续删除客户名称为【${row.name}】的信息?`, "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.list.splice(index, 1);
+      this.$confirm(
+        `是否继续删除员工名称为【${row.customer_name}】的信息?`,
+        "删除",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(() => {
+        customerDelete(row).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: "success",
+              message: "删除成功！",
+              duration: 5000,
+            });
+            this.getList();
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败!",
+              duration: 5000,
+            });
+          }
+        });
       });
     },
     // 导出EXCEL表格
@@ -201,13 +219,21 @@ export default {
       if (this.multipleSelection.length) {
         this.downloadLoading = true;
         import("@/vendor/Export2Excel").then((excel) => {
-          const tHeader = ["Id", "Title", "Author", "Readings", "Date"];
+          const tHeader = [
+            "客户名称",
+            "联系电话",
+            "销售产品",
+            "省份",
+            "城市",
+            "市区",
+          ];
           const filterVal = [
-            "id",
-            "title",
-            "author",
-            "pageviews",
-            "display_time",
+            "customer_name",
+            "customer_phone",
+            "promoting_products",
+            "province",
+            "city",
+            "area",
           ];
           const list = this.multipleSelection;
           const data = this.formatJson(filterVal, list);

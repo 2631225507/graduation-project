@@ -46,7 +46,7 @@ export default {
       this.chart = echarts.init(this.$el, "macarons");
       this.chart.setOption({
         title: {
-          text: this.chartData.title,
+          text: this.chartData.product_name,
           left: "center",
         },
         tooltip: {
@@ -63,13 +63,7 @@ export default {
             type: "pie",
             radius: ["40%", "70%"],
             avoidLabelOverlap: false,
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-            ],
+            data:  this.chartData.product_details,
             animationEasing: "cubicInOut",
             animationDuration: 2600,
           },

@@ -12,6 +12,7 @@ class EnumService extends Service {
     });
     return enums;
   }
+
 }
 
 module.exports = EnumService;

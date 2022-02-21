@@ -13,6 +13,7 @@ class Enum extends Controller {
         }
     }
 
+
 }
 
 module.exports = Enum;

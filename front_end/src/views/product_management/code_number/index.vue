@@ -152,7 +152,7 @@ export default {
     this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
-    // 获取入库信息
+    // 获取产品信息
     getList() {
       getProductInfo(this.listQuery).then((res) => {
         this.tableData = res.data.rows;

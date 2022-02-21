@@ -1,65 +1,56 @@
-/* indent size: 2 */
-
+'use strict';
+const base = require('./base');
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
 
-  const Model = app.model.define('customer', {
+  const Customer = app.model.define('customer', {
     customer_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     customer_name: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     customer_phone: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
+      allowNull: true
+    },
+    promoting_id: {
+      type: STRING(255),
       allowNull: true
     },
     promoting_products: {
-      type: DataTypes.STRING(255),
+      type: STRING(255),
       allowNull: true
     },
     province_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     province: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     city_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     city: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     area_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     area: {
-      type: DataTypes.STRING(32),
-      allowNull: true
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    updated_at: {
-      type: DataTypes.DATE,
+      type: STRING(32),
       allowNull: true
     }
-  }, {
-    tableName: 'customer'
   });
 
-  Model.associate = function() {
-
-  }
-
-  return Model;
+  return Customer;
 };

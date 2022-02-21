@@ -72,7 +72,6 @@ class ProductService extends Service {
                     product_number
                 },
             });
-            console.log(product_number, product, info);
             const dataInfo = await ctx.model.ProductDetail.bulkCreate(info)
             return true
         } catch (error) {
@@ -120,7 +119,3 @@ class ProductService extends Service {
 }
 
 module.exports = ProductService;
-
-
-    //     attributes: [['name','className'], 'rank'], 
-    // raw:true 

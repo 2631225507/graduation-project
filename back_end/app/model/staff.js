@@ -1,5 +1,5 @@
 'use strict';
-
+const base = require('./base');
 module.exports = app => {
   const { STRING, INTEGER,DATE }= app.Sequelize;
 
