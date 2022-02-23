@@ -4,8 +4,8 @@
     <div class="filter-container">
       <el-input
         class="filter-item"
-        v-model="listQuery.name"
-        placeholder="请输入产品名称"
+        v-model="listQuery.order_number"
+        placeholder="请输入订单编号"
         style="width: 200px"
         @keyup.enter.native="handleFilter"
       />
@@ -15,14 +15,6 @@
         icon="el-icon-search"
         @click="handleFilter"
         >查询</el-button
-      >
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-plus"
-        style="margin-left: 10px"
-        @click="handleCreate"
-        >添加</el-button
       >
       <el-button
         class="filter-item"
@@ -50,41 +42,21 @@
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="p_name"
-        label="产品名称"
-        width="200"
+        prop="client_name"
+        label="客户"
+        width="180"
         align="center"
       >
       </el-table-column>
-      <el-table-column
-        prop="c_code_number"
-        label="码数"
-        width="100"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column prop="p_price" label="单价" width="80" align="center">
-      </el-table-column>
-      <el-table-column prop="p_number" label="数量" width="80" align="center">
+      <el-table-column label="下单产品" width="200" align="center">
+        <template slot-scope="{ row }">
+          <span class="link-type" @click="handleDetail(row)">
+            {{ row.goods_name }}
+          </span>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="order_time"
-        label="下单时间"
-        width="120"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="delivery_time"
-        label="发货时间"
-        width="120"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column prop="c_name" label="客户" width="180" align="center">
-      </el-table-column>
-      <el-table-column
-        prop="c_phone"
+        prop="client_phone"
         label="联系号码"
         width="145"
         align="center"
@@ -111,16 +83,34 @@
         ></el-table-column>
       </el-table-column>
       <el-table-column
-        prop="detailed"
+        prop="detail_address"
         label="详细地址"
-        width="200"
+        width="220"
         align="center"
       >
       </el-table-column>
-      <el-table-column prop="sname" label="负责人" width="100" align="center">
+      <el-table-column
+        prop="operator"
+        label="负责人"
+        width="100"
+        align="center"
+      >
       </el-table-column>
-      <el-table-column prop="remark" label="备注" width="150" align="center">
+
+      <el-table-column label="下单时间" width="120" align="center">
+        <template slot-scope="{ row }">
+          {{ row.created_at.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "") }}
+        </template>
       </el-table-column>
+      <el-table-column label="发货时间" width="120" align="center">
+        <template slot-scope="{ row }">
+          <span v-if="row.delivery_time">{{
+            row.delivery_time.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "")
+          }}</span>
+          <span v-else>{{ row.delivery_time }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column fixed="right" label="操作" width="100" align="center">
         <template slot-scope="{ row, $index }">
           <el-button
@@ -134,6 +124,13 @@
       </el-table-column>
     </el-table>
 
+    <!-- 详情 -->
+    <detail-info
+      v-if="dialogVisible"
+      :list="list"
+      :dialogVisible.sync="dialogVisible"
+    ></detail-info>
+
     <!-- 分页 -->
     <pagination
       v-show="total > 0"
@@ -146,42 +143,19 @@
 </template>
 
 <script>
+import { getOrderInfo, orderDelete } from "@/api/order";
+import DetailInfo from "./detail";
 import Pagination from "@/components/Pagination";
 export default {
   name: "OrderManagement",
-  components: { Pagination },
+  components: { Pagination, DetailInfo },
   data() {
     return {
-      tableData: [
-        {
-          allnumber: 3000,
-          allprice: 30000,
-          area: "马尾区",
-          c_code_number: 35.5,
-          c_name: "四创科技有限公司黄河根",
-          c_p_id: 470,
-          c_phone: "13500000001",
-          city: "福州市",
-          delivery_time: "2020-05-28 00:00:00",
-          detailed: "阳光学院菜鸟驿站",
-          id: 69,
-          order_number: "BUGNHVCGYVDKDXBC",
-          order_time: "2020-05-27",
-          out_time: null,
-          outbound: "0",
-          p_name: "安踏霸道系列-1.27",
-          p_number: 100000,
-          p_price: "1110",
-          province: "福建省",
-          replenishment: null,
-          sname: "黄河根",
-          time: 1590916617000,
-        },
-      ],
+      tableData: [],
       downloadLoading: false,
       tableHeight: "",
-      total: 2, //表格总条数
-      listLoading: true, //loading样式
+      total: 0, //表格总条数
+      dialogVisible: false, //订单详情弹窗
       listQuery: {
         //请求参数
         page: 1,
@@ -191,14 +165,19 @@ export default {
     };
   },
   created() {
-    this.getList()
+    this.getList();
   },
   mounted() {
     this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
     // 获取订单信息
-    getList() {},
+    getList() {
+      getOrderInfo(this.listQuery).then((res) => {
+        this.tableData = res.data.rows;
+        this.total = res.data.count;
+      });
+    },
     // 合并行
     objectSpanMethod({ row, column, rowIndex }) {
       const dataProvider = this.tableData;
@@ -234,8 +213,22 @@ export default {
           type: "warning",
         }
       ).then(() => {
-        this.tableData.splice(index, 1);
-        // this.objectSpanMethod()
+         orderDelete(row).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: "success",
+              message: "删除成功！",
+              duration: 5000,
+            });
+            this.getList();
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败!",
+              duration: 5000,
+            });
+          }
+        });
       });
     },
     // 查询数据
@@ -243,26 +236,35 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-    handleCreate() {},
+    // 打开产品详情弹窗
+    handleDetail(row) {
+      this.list = { ...row };
+      this.dialogVisible = true;
+    },
     // 导出EXCEL表格
     handleDownload() {
       if (this.multipleSelection.length) {
         this.downloadLoading = true;
         import("@/vendor/Export2Excel").then((excel) => {
-          const tHeader = ["Id", "Title", "Author", "Readings", "Date"];
+          const tHeader = ["订单号", "客户", "下单产品", "联系号码", "省", "市", "区", "详细地址", "负责人", "下单时间"];
           const filterVal = [
-            "id",
-            "title",
-            "author",
-            "pageviews",
-            "display_time",
+            "order_number",
+            "client_name",
+            "goods_name",
+            "client_phone",
+            "province",
+            "city",
+            "area",
+            "detail_address",
+            "operator",
+            "created_at",
           ];
           const list = this.multipleSelection;
           const data = this.formatJson(filterVal, list);
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: "出库信息",
+            filename: "订单信息",
           });
           this.$refs.multipleTable.clearSelection();
           this.downloadLoading = false;

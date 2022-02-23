@@ -1,89 +1,83 @@
-/* indent size: 2 */
-
+'use strict';
+const base = require('./base');
 module.exports = app => {
-  const DataTypes = app.Sequelize;
-
-  const Model = app.model.define('order', {
+  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const Order = app.model.define('order', {
     order_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     order_number: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     client_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     client_name: {
-      type: DataTypes.STRING(100),
+      type: STRING(100),
       allowNull: true
     },
     client_phone: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     goods_name: {
-      type: DataTypes.STRING(255),
+      type: STRING(255),
       allowNull: true
     },
     delivery_time: {
-      type: DataTypes.DATE,
+      type: DATE,
+      allowNull: true
+    },
+    operator_id: {
+      type: INTEGER(11),
       allowNull: true
     },
     operator: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     province_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     province: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     city_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     city: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     area_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     area: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     detail_address: {
-      type: DataTypes.STRING(255),
+      type: STRING(255),
       allowNull: true
     },
     is_issue: {
-      type: DataTypes.STRING(5),
-      allowNull: true
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    updated_at: {
-      type: DataTypes.DATE,
+      type: STRING(5),
       allowNull: true
     }
-  }, {
-    tableName: 'order'
   });
 
-  Model.associate = function() {
-
+  Order.associate = function () {
+    Order.hasMany(app.model.OrderDetail, { foreignKey: 'order_id' })
   }
 
-  return Model;
+  return Order;
 };

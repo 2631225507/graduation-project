@@ -1,45 +1,47 @@
-/* indent size: 2 */
+'use strict';
+const base = require('./base');
 
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
 
-  const Model = app.model.define('order_detail', {
+  const OrderDetail = app.model.define('order_detail', {
     detail_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
       primaryKey: true
     },
     goods: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     size: {
-      type: DataTypes.INTEGER(5),
+      type: INTEGER(5),
       allowNull: true
     },
     stock: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     price: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     order_quantity: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     order_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false
     }
   }, {
-    tableName: 'order_detail'
+    createdAt: false,
+    updatedAt: false
   });
 
-  Model.associate = function() {
-
+  OrderDetail.associate = function () {
+    OrderDetail.belongsTo(app.model.Order, { foreignKey: 'order_id' })
   }
 
-  return Model;
+  return OrderDetail;
 };

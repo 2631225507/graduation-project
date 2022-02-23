@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import { getProvice, getCity, getArea, getDuties } from "@/api/address";
+import { getProvice, getCity, getArea} from "@/api/address";
 import { staffCreate, staffUpdate } from "@/api/staff";
 import { isvalidPhone } from "@/utils/validate";
 var validPhone = (rule, value, callback) => {
