@@ -34,3 +34,12 @@ export function orderDelete(data) {
         data
     })
 }
+
+
+export function orderOut(data) {
+    return service({
+        url: '/api/order/out',
+        method: 'post',
+        data
+    })
+}

@@ -1,5 +1,6 @@
 'use strict';
 const Service = require('egg').Service;
+const moment = require('moment');
 
 class OrderService extends Service {
     // 获取订单
@@ -23,7 +24,6 @@ class OrderService extends Service {
     // 添加订单
     async createOrder(body) {
         const { ctx } = this;
-
         try {
             return await ctx.model.transaction(async t => {
                 // 创建订单信息
@@ -39,6 +39,23 @@ class OrderService extends Service {
         } catch (error) {
             console.log(error);
             return { success: false };
+        }
+    }
+
+    // 修改订单
+    async updateOrder(body) {
+        const { ctx } = this;
+        body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        try {
+            await ctx.model.Order.update(body, {
+                where: {
+                    order_id: body.order_id
+                },
+            });
+            return true
+        } catch (error) {
+            console.log(error);
+            return null;
         }
     }
 
@@ -63,6 +80,26 @@ class OrderService extends Service {
         }
     }
 
+    // 出库
+    async exWarehouse(body) {
+        const { ctx } = this;
+        body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        try {
+            await ctx.model.Order.update({
+                is_issue: body.is_issue,
+                delivery_time: body.updated_at,
+                updated_at: body.updated_at
+            }, {
+                where: {
+                    order_id: body.order_id
+                },
+            });
+            return true
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
 }
 
 module.exports = OrderService;

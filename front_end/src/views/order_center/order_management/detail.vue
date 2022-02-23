@@ -7,6 +7,10 @@
       width="60%"
       @close="closeDialog"
     >
+      <div class="tip">
+        <span style="font-size:16px">订单总额：</span>
+        <span>{{ totalMoney }}</span>
+      </div>
       <!-- 表格数据 -->
       <el-table
         style="width: 100%"
@@ -35,7 +39,7 @@
             <span>{{ row.price }}</span>
           </template>
         </el-table-column>
-         <el-table-column label="下单数量" align="center" min-width="170px">
+        <el-table-column label="下单数量" align="center" min-width="170px">
           <template slot-scope="{ row }">
             <span>{{ row.order_quantity }}</span>
           </template>
@@ -70,11 +74,20 @@ export default {
   data() {
     return {
       isOpen: this.dialogVisible,
-      orderList: [],
+      orderList: [], //订单详情
     };
   },
   created() {
     this.orderList = this.list.order_details;
+  },
+  computed: {
+    totalMoney() {
+      let total = 0;
+      for (let i = 0; i < this.orderList.length; i++) {
+        total += this.orderList[i].price * this.orderList[i].order_quantity;
+      }
+      return total;
+    },
   },
   methods: {
     // 关闭外层弹窗
@@ -84,3 +97,12 @@ export default {
   },
 };
 </script>
+
+
+<style lang="scss" scoped>
+.tip {
+  color: #55b569;
+  font-size:14px;
+  margin-bottom: 10px;
+}
+</style>
