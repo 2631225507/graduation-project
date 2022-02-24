@@ -14,7 +14,7 @@ class WarehousingController extends Controller {
         }
     }
 
-    // 添加入库
+    // 添加入库信息
     async createWarehousing() {
         const { ctx } = this;
         const body = ctx.request.body;
@@ -26,29 +26,29 @@ class WarehousingController extends Controller {
         }
     }
 
-    // 修改订单
-    // async updateOrder() {
-    //     const { ctx } = this;
-    //     const body = ctx.request.body;
-    //     const res = await ctx.service.order.updateOrder(body);
-    //     if (res) {
-    //         this.success('修改成功');
-    //     } else {
-    //         this.error('修改失败');
-    //     }
-    // }
+    // 修改入库信息
+    async updateWarehousing() {
+        const { ctx } = this;
+        const body = ctx.request.body;
+        const res = await ctx.service.warehousing.updateWarehousing(body);
+        if (res) {
+            this.success('修改成功');
+        } else {
+            this.error('修改失败');
+        }
+    }
 
-     // 删除订单
-    //  async deleteOrder() {
-    //     const { ctx } = this;
-    //     const body = ctx.request.body;
-    //     const res = await ctx.service.order.deleteOrder(body);
-    //     if (res.success) {
-    //         this.success('删除成功');
-    //     } else {
-    //         this.error('删除失败 ' + (res.msg || ''));
-    //     }
-    // }
+     // 删除入库信息
+     async deleteWarehousing() {
+        const { ctx } = this;
+        const body = ctx.request.body;
+        const res = await ctx.service.warehousing.deleteWarehousing(body);
+        if (res.success) {
+            this.success('删除成功');
+        } else {
+            this.error('删除失败 ' + (res.msg || ''));
+        }
+    }
 }
 
 module.exports = WarehousingController;

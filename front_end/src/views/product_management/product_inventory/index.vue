@@ -1,6 +1,6 @@
 <template>
   <div class="product-inventory">
-    <div v-for="(item, index) in detailData" :key="index">
+    <div v-for="(item, index) in detailData" :key="index" class="local">
       <pie-chart :chartData="item" />
     </div>
   </div>
@@ -38,12 +38,12 @@ export default {
         });
 
         this.pieChartData.forEach((item, index) => {
-            item.product_details.forEach((val) => {
-              this.detailData[index].product_details.push({
-                value: val.stock,
-                name: val.size,
-              });
-            })
+          item.product_details.forEach((val) => {
+            this.detailData[index].product_details.push({
+              value: val.stock,
+              name: val.size,
+            });
+          });
         });
         // for (let i = 0; i < this.pieChartData.length; i++) {
         //   for ( let j = 0;j < this.pieChartData[i].product_details.length;j++) {
@@ -62,5 +62,9 @@ export default {
 <style lang="scss" scoped>
 .product-inventory {
   padding: 20px;
+  .local {
+    display: inline-block;
+    width: 49%;
+  }
 }
 </style>

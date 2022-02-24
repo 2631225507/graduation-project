@@ -69,7 +69,7 @@ export default {
     };
   },
   created() {
-    this.orderList = this.list.order_details;
+    this.orderList = this.list.warehousing_details;
   },
   methods: {
     // 关闭外层弹窗

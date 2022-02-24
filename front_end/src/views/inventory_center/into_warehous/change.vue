@@ -20,6 +20,7 @@
             v-model="orderInfo.order_id"
             clearable
             filterable
+            :disabled="isUse"
             placeholder="请选择订单编号"
             style="width: 100%"
             @change="orderChange"
@@ -100,7 +101,7 @@
 import { getOrderInfo } from "@/api/order";
 import { getStaffInfo } from "@/api/staff";
 import { getShelvesInfo } from "@/api/goods-shelves";
-import { warehousingCreate } from "@/api/warehousing";
+import { warehousingCreate,updateWarehousing } from "@/api/warehousing";
 export default {
   props: {
     formVisible: {
@@ -108,6 +109,10 @@ export default {
     },
     state: {
       type: String,
+    },
+    editData: {
+      type: Object,
+      default: () => {},
     },
   },
   watch: {
@@ -120,6 +125,7 @@ export default {
       isShow: this.formVisible,
       orderInfo: {},
       detailArr: [],
+      isUse: false,
       orderOptions: [],
       staffOptions: [],
       storeOptions: [],
@@ -141,6 +147,10 @@ export default {
     };
   },
   created() {
+    if (this.state == "update") {
+      this.isUse = true;
+      this.orderInfo = { ...this.editData };
+    }
     this.getOrder();
     this.getStaff();
     this.getShelves();
@@ -206,6 +216,7 @@ export default {
                 type: "success",
                 message: "添加成功！",
               });
+              this.$parent.getList();
               this.closeDialog();
             } else {
               this.$message({
@@ -221,8 +232,20 @@ export default {
     updateData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          updateArticle(this.orderInfo).then(() => {
-            this.closeDialog();
+           updateWarehousing(this.orderInfo).then((res) => {
+            if (res.success) {
+              this.$message({
+                type: "success",
+                message: "修改成功！",
+              });
+              this.closeDialog();
+              this.$parent.getList();
+            } else {
+              this.$message({
+                type: "warning",
+                message: "修改失败!",
+              });
+            }
           });
         }
       });

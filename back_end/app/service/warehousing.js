@@ -21,7 +21,7 @@ class WarehousingService extends Service {
         });
     }
 
-    // // 添加入库
+    // // 添加入库信息
     async createWarehousing(body) {
         const { ctx } = this;
         try {
@@ -41,43 +41,43 @@ class WarehousingService extends Service {
         }
     }
 
-    // 修改订单
-    // async updateOrder(body) {
-    //     const { ctx } = this;
-    //     body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-    //     try {
-    //         await ctx.model.Order.update(body, {
-    //             where: {
-    //                 order_id: body.order_id
-    //             },
-    //         });
-    //         return true
-    //     } catch (error) {
-    //         console.log(error);
-    //         return null;
-    //     }
-    // }
+    // 修改入库信息
+    async updateWarehousing(body) {
+        const { ctx } = this;
+        body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        try {
+            await ctx.model.Warehousing.update(body, {
+                where: {
+                    chargeback_id: body.chargeback_id
+                },
+            });
+            return true
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
 
-    // 删除订单
-    // async deleteWarehousing({ order_id }) {
-    //     const { ctx } = this;
-    //     try {
-    //         await ctx.model.Order.destroy({
-    //             where: {
-    //                 order_id,
-    //             },
-    //         });
-    //         await ctx.model.OrderDetail.destroy({
-    //             where: {
-    //                 order_id,
-    //             },
-    //         });
-    //         return { success: true };
-    //     } catch (error) {
-    //         console.log(error);
-    //         return { success: false };
-    //     }
-    // }
+    // 删除入库信息
+    async deleteWarehousing({ chargeback_id }) {
+        const { ctx } = this;
+        try {
+            await ctx.model.Warehousing.destroy({
+                where: {
+                    chargeback_id,
+                },
+            });
+            await ctx.model.WarehousingDetail.destroy({
+                where: {
+                    chargeback_id,
+                },
+            });
+            return { success: true };
+        } catch (error) {
+            console.log(error);
+            return { success: false };
+        }
+    }
 }
 
 module.exports = WarehousingService;

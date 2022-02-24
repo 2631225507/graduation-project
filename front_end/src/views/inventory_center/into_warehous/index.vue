@@ -100,11 +100,12 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
-    <!-- 新增弹窗 -->
+    <!-- 新增/修改弹窗 -->
     <change-info
       :formVisible.sync="formVisible"
       v-if="formVisible"
       :state="state"
+      :editData="editData"
     ></change-info>
 
     <!-- 详情 -->
@@ -117,7 +118,7 @@
 </template>
 
 <script>
-import { getWarehousingInfo } from "@/api/warehousing";
+import { getWarehousingInfo, deleteWarehousing } from "@/api/warehousing";
 import Pagination from "@/components/Pagination";
 import ChangeInfo from "./change";
 import DetailInfo from "./detail";
@@ -132,6 +133,7 @@ export default {
       formVisible: false, //添加修改弹窗
       dialogVisible: false, //订单详情弹窗
       list: null,
+      editData: {}, //编辑数据
       listQuery: {
         //请求参数
         page: 1,
@@ -200,7 +202,22 @@ export default {
           type: "warning",
         }
       ).then(() => {
-        this.tableData.splice(index, 1);
+        deleteWarehousing(row).then((res) => {
+          if (res.success) {
+            this.$message({
+              type: "success",
+              message: "删除成功！",
+              duration: 5000,
+            });
+            this.getList();
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败!",
+              duration: 5000,
+            });
+          }
+        });
       });
     },
     // 打开添加弹窗
@@ -210,6 +227,7 @@ export default {
     },
     // 打开修改弹窗
     handleUpdate(row) {
+      this.editData = Object.assign({}, row);
       this.state = "update";
       this.formVisible = true;
     },

@@ -19,19 +19,19 @@ export function warehousingCreate(data1, data2) {
     })
 }
 
-// export function orderUpdate(data) {
-//     return service({
-//         url: '/api/order/update',
-//         method: 'post',
-//         data
-//     })
-// }
+export function updateWarehousing(data) {
+    return service({
+        url: '/api/warehousing/update',
+        method: 'post',
+        data
+    })
+}
 
-// export function orderDelete(data) {
-//     return service({
-//         url: '/api/order/delete',
-//         method: 'post',
-//         data
-//     })
-// }
+export function deleteWarehousing(data) {
+    return service({
+        url: '/api/warehousing/delete',
+        method: 'post',
+        data
+    })
+}
 
