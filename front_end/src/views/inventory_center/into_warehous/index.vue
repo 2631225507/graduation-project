@@ -4,8 +4,8 @@
     <div class="filter-container">
       <el-input
         class="filter-item"
-        v-model="listQuery.name"
-        placeholder="请输入客户名称"
+        v-model="listQuery.order_number"
+        placeholder="请输入订单号"
         style="width: 200px"
         @keyup.enter.native="handleFilter"
       />
@@ -24,14 +24,6 @@
         @click="handleCreate"
         >添加</el-button
       >
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-download"
-        :loading="downloadLoading"
-        @click="handleDownload"
-        >导出excel</el-button
-      >
     </div>
 
     <!-- 表格 -->
@@ -42,57 +34,45 @@
       border
       :height="tableHeight"
     >
+      <el-table-column label="订单号" width="200" align="center">
+        <template slot-scope="{ row }">
+          <span class="link-type" @click="handleDetail(row)">
+            {{ row.order_number }}
+          </span>
+        </template></el-table-column
+      >
       <el-table-column
-        prop="order_number"
-        fixed
-        label="订单号"
-        width="200"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="c_name"
-        label="客户名称"
+        prop="client_name"
+        label="退货客户"
         width="180"
         align="center"
       >
       </el-table-column>
-      <el-table-column
-        prop="p_name"
-        label="产品名称"
-        width="200"
-        align="center"
-      >
+      <el-table-column label="验货日期" min-width="120" align="center">
+        <template slot-scope="{ row }">
+          {{ row.signing_time.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "") }}
+        </template>
       </el-table-column>
       <el-table-column
-        prop="c_code_number"
-        label="码数"
-        width="100"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column prop="p_price" label="单价" width="80" align="center">
-      </el-table-column>
-      <el-table-column prop="p_number" label="数量" width="80" align="center">
-      </el-table-column>
-      <el-table-column
-        prop="delivery_time"
-        label="到货日期"
-        width="120"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="remark"
-        label="所在货架"
+        prop="save_shelf"
+        label="存放货架"
         width="150"
         align="center"
       >
       </el-table-column>
-      <el-table-column prop="sname" label="负责人" width="100" align="center">
+      <el-table-column
+        prop="tallying_staff"
+        label="点货员"
+        width="100"
+        align="center"
+      >
       </el-table-column>
-      <el-table-column prop="time" label="操作时间" width="100" align="center">
+      <el-table-column label="操作时间" min-width="100" align="center">
+        <template slot-scope="{ row }">
+          {{ row.created_at.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "") }}
+        </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="215" align="center">
+      <el-table-column label="操作" width="215" align="center">
         <template slot-scope="{ row, $index }">
           <el-button
             type="primary"
@@ -121,63 +101,51 @@
       @pagination="getList"
     />
     <!-- 新增弹窗 -->
-     <change-info
+    <change-info
       :formVisible.sync="formVisible"
       v-if="formVisible"
       :state="state"
     ></change-info>
+
+    <!-- 详情 -->
+    <detail-info
+      v-if="dialogVisible"
+      :list="list"
+      :dialogVisible.sync="dialogVisible"
+    ></detail-info>
   </div>
 </template>
 
 <script>
+import { getWarehousingInfo } from "@/api/warehousing";
 import Pagination from "@/components/Pagination";
 import ChangeInfo from "./change";
+import DetailInfo from "./detail";
 export default {
   name: "WarehousingManagement",
-  components: { Pagination, ChangeInfo },
+  components: { Pagination, ChangeInfo, DetailInfo },
   data() {
     return {
-      tableData: [
-        {
-          allnumber: 3000,
-          allprice: 30000,
-          area: "马尾区",
-          c_code_number: 35.5,
-          c_name: "四创科技有限公司黄河根",
-          c_p_id: 470,
-          c_phone: "13500000001",
-          city: "福州市",
-          delivery_time: "2020-05-28 00:00:00",
-          detailed: "阳光学院菜鸟驿站",
-          id: 69,
-          order_number: "BUGNHVCGYVDKDXBC",
-          order_time: "2020-05-27",
-          out_time: null,
-          outbound: "0",
-          p_name: "安踏霸道系列-1.27",
-          p_number: 100000,
-          p_price: "1110",
-          province: "福建省",
-          replenishment: null,
-          sname: "黄河根",
-          time: 1590916617000,
-        },
-      ],
+      tableData: [],
       tableHeight: "",
-      total: 2, //表格总条数
+      total: 0, //表格总条数
       formVisible: false, //添加修改弹窗
-      listLoading: true, //loading样式
+      dialogVisible: false, //订单详情弹窗
+      list: null,
       listQuery: {
         //请求参数
         page: 1,
         limit: 10,
-        name: undefined,
+        order_number: undefined,
       },
       downloadLoading: false,
     };
   },
   mounted() {
     this.tableHeight = window.innerHeight - 188 - 55;
+  },
+  created() {
+    this.getList();
   },
   methods: {
     // 合并行
@@ -206,20 +174,20 @@ export default {
     },
     // 获取入库信息
     getList() {
-      // this.listLoading = true;
-      // fetchList(this.listQuery).then((response) => {
-      //   this.list = response.data.items;
-      //   this.total = response.data.total;
-      //   // 模拟请求的时间
-      setTimeout(() => {
-        this.listLoading = false;
-      }, 1.5 * 1000);
-      // });
+      getWarehousingInfo(this.listQuery).then((res) => {
+        this.tableData = res.data.rows;
+        this.total = res.data.count;
+      });
     },
     // 查询数据
     handleFilter() {
       this.listQuery.page = 1;
       this.getList();
+    },
+    // 打开订单详情弹窗
+    handleDetail(row) {
+      this.list = { ...row };
+      this.dialogVisible = true;
     },
     // 删除
     handleDelete(row, index) {
@@ -233,9 +201,9 @@ export default {
         }
       ).then(() => {
         this.tableData.splice(index, 1);
-        // this.objectSpanMethod()
       });
     },
+    // 打开添加弹窗
     handleCreate() {
       this.state = "create";
       this.formVisible = true;
@@ -244,40 +212,6 @@ export default {
     handleUpdate(row) {
       this.state = "update";
       this.formVisible = true;
-    },
-    // 导出EXCEL表格
-    handleDownload() {
-      if (this.multipleSelection.length) {
-        this.downloadLoading = true;
-        import("@/vendor/Export2Excel").then((excel) => {
-          const tHeader = ["Id", "Title", "Author", "Readings", "Date"];
-          const filterVal = [
-            "id",
-            "title",
-            "author",
-            "pageviews",
-            "display_time",
-          ];
-          const list = this.multipleSelection;
-          const data = this.formatJson(filterVal, list);
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: "客户档案信息",
-          });
-          this.$refs.multipleTable.clearSelection();
-          this.downloadLoading = false;
-        });
-      } else {
-        this.$message({
-          message: "请至少选择一条数据",
-          type: "warning",
-        });
-      }
-    },
-    //数据格式转换
-    formatJson(filterVal, jsonData) {
-      return jsonData.map((v) => filterVal.map((j) => v[j]));
     },
   },
 };

@@ -43,4 +43,7 @@ module.exports = app => {
   
   router.post('/api/order/out', controller.order.exWarehouse); //出库
 
+
+  router.get('/api/warehousingInfo', controller.warehousing.getWarehousing); //获取客户信息
+  router.post('/api/warehousing/create', controller.warehousing.createWarehousing); //添加订单信息
 };

@@ -1,53 +1,56 @@
-/* indent size: 2 */
-
+'use strict';
+const base = require('./base');
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER, DATE } = app.Sequelize;
 
-  const Model = app.model.define('warehousing', {
+  const Warehousing = app.model.define('warehousing', {
     chargeback_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
+    },
+    order_id: {
+      type: INTEGER(11),
+      allowNull: true
     },
     order_number: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     client_name: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
       allowNull: true
     },
     signing_time: {
-      type: DataTypes.DATE,
+      type: DATE,
       allowNull: true
     },
     tallying_staff: {
-      type: DataTypes.STRING(32),
+      type: STRING(32),
+      allowNull: true
+    },
+    staff_id: {
+      type: INTEGER(11),
+      allowNull: true
+    },
+    tallying_staff: {
+      type: STRING(32),
       allowNull: true
     },
     shelf_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     save_shelf: {
-      type: DataTypes.STRING(32),
-      allowNull: true
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    updated_at: {
-      type: DataTypes.DATE,
+      type: STRING(32),
       allowNull: true
     }
-  }, {
-    tableName: 'warehousing'
   });
 
-  Model.associate = function() {
-
+  Warehousing.associate = function () {
+    Warehousing.hasMany(app.model.WarehousingDetail, { foreignKey: 'chargeback_id' })
   }
 
-  return Model;
+  return Warehousing;
 };

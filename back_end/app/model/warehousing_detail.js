@@ -1,37 +1,44 @@
-/* indent size: 2 */
+'use strict';
+const base = require('./base');
 
 module.exports = app => {
-  const DataTypes = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
 
-  const Model = app.model.define('warehousing_detail', {
+  const WarehousingDetail = app.model.define('warehousing_detail', {
     detail_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     chargeback_id: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     product: {
-      type: DataTypes.STRING(100),
+      type: STRING(100),
       allowNull: true
     },
     size: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
       allowNull: true
     },
     amount: {
-      type: DataTypes.INTEGER(11),
+      type: INTEGER(11),
+      allowNull: true
+    },
+    price: {
+      type: INTEGER(11),
       allowNull: true
     }
   }, {
-    tableName: 'warehousing_detail'
+    createdAt: false,
+    updatedAt: false
   });
 
-  Model.associate = function() {
-
+  WarehousingDetail.associate = function () {
+    WarehousingDetail.belongsTo(app.model.Warehousing, { foreignKey: 'chargeback_id' })
   }
 
-  return Model;
+  return WarehousingDetail;
 };
