@@ -1,6 +1,7 @@
 'use strict';
 const Service = require('egg').Service;
 const moment = require('moment');
+const Sequelize = require('sequelize')
 
 class OrderService extends Service {
     // 获取订单
@@ -31,6 +32,15 @@ class OrderService extends Service {
                 const OrderDetailArr = body.infoTable.map(item => {
                     return { order_id: createOrder.order_id, goods: item.goods, size: item.size, stock: parseInt(item.stock), price: item.price, order_quantity: parseInt(item.order_quantity) };
                 });
+                for (let i = 0; i < body.infoTable.length; i++) {
+                    await ctx.model.ProductDetail.update({
+                        stock: body.infoTable[i].surplus
+                    }, {
+                        where: {
+                            detail_id: body.infoTable[i].detail_id
+                        },
+                    }, { transaction: t });
+                }
                 // 创建订单详情信息
                 const res = await ctx.model.OrderDetail.bulkCreate(OrderDetailArr, { transaction: t });
 

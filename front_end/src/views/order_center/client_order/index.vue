@@ -400,6 +400,12 @@ export default {
               infoTable.push(this.tableData[i]);
             }
           }
+          // 计算库存剩余
+          for (let j = 0; j < infoTable.length; j++) {
+            infoTable[j].surplus = String(
+              infoTable[j].stock - infoTable[j].order_quantity
+            );
+          }
           if (infoTable <= 0) {
             this.$message({
               type: "warning",
