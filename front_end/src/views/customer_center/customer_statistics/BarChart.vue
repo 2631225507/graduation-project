@@ -71,7 +71,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["下单量（单）", "成交量（万双）", "预补数（万双）", "交易金额（万元）"],
+            data: ["下单量（单）", "成交量（千双）", "销售产品数", "交易金额（万元）"],
             axisTick: {
               alignWithLabel: true,
             },

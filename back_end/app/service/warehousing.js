@@ -26,12 +26,12 @@ class WarehousingService extends Service {
         const { ctx } = this;
         try {
             return await ctx.model.transaction(async t => {
-                // 创建订单信息
+                // 创建入库信息
                 const createInto = await ctx.model.Warehousing.create(body.mainTable, { transaction: t });
                 const WarehousingDetailArr = body.infoTable.map(item => {
                     return { chargeback_id: createInto.chargeback_id, product: item.goods, size: item.size, price: item.price, amount: parseInt(item.order_quantity) };
                 });
-                // 创建订单详情信息
+                // 创建入库详情信息
                 const res = await ctx.model.WarehousingDetail.bulkCreate(WarehousingDetailArr, { transaction: t });
                 return { success: res.length > 0 };
             });

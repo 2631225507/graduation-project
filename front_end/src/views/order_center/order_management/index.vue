@@ -270,7 +270,7 @@ export default {
       isSelectCity: true, //是否禁用市下拉
       isSelectArea: true, //是否禁用区下拉
       dialogVisible: false, //订单详情弹窗
-      //电表基础校验信息
+      //校验信息
       suggestList: [
         {
           key: "client_phone",

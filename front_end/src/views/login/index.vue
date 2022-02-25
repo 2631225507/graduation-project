@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">LN</h3>
+        <h3 class="title">力宁体育用品信息管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -268,7 +268,7 @@ $light_gray: #eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background: url(./back.jpg);
   overflow: hidden;
 
   .login-form {

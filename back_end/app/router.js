@@ -48,4 +48,6 @@ module.exports = app => {
   router.post('/api/warehousing/create', controller.warehousing.createWarehousing); //添加入库信息
   router.post('/api/warehousing/update', controller.warehousing.updateWarehousing); //修改入库信息
   router.post('/api/warehousing/delete', controller.warehousing.deleteWarehousing); //删除入库信息
+
+  router.post('/api/customer/statistics', controller.chart.getCustomerStatistics);//客户数据统计
 };
