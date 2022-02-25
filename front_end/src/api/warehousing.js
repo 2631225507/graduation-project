@@ -19,11 +19,14 @@ export function warehousingCreate(data1, data2) {
     })
 }
 
-export function updateWarehousing(data) {
+export function updateWarehousing(data1,data2) {
     return service({
         url: '/api/warehousing/update',
         method: 'post',
-        data
+        data:{
+            newValue:data1,
+            oldValue:data2
+        }
     })
 }
 

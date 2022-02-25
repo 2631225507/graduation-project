@@ -116,6 +116,7 @@
     <detail-info
       v-if="dialogVisible"
       :title="detailTitle"
+      :detailData="detailData"
       :dialogVisible.sync="dialogVisible"
     ></detail-info>
 
@@ -148,6 +149,7 @@ export default {
         shelf_number: undefined,
       },
       editData: {}, //编辑数据
+      detailData:{},//详情数据
       tableHeight: "", //表格高度
       multipleSelection: [], //表格勾选数据
       downloadLoading: false,
@@ -182,6 +184,7 @@ export default {
       if (row.access_box > 0) {
         this.detailTitle = row.shelf_number + "货架存放的产品";
         this.dialogVisible = true;
+        this.detailData = { ...row };
       } else {
         this.$message({
           message: "当前货架还未存放产品",

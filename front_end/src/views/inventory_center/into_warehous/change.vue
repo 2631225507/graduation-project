@@ -180,7 +180,7 @@ export default {
         this.staffOptions = res.data.rows;
       });
     },
-    // 选择货架
+    // 选择验收员工
     staffChange(val) {
       if ((val ?? "") !== "") {
         let obj = {};
@@ -232,7 +232,7 @@ export default {
     updateData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-           updateWarehousing(this.orderInfo).then((res) => {
+           updateWarehousing(this.orderInfo,this.editData).then((res) => {
             if (res.success) {
               this.$message({
                 type: "success",
