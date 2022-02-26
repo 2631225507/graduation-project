@@ -18,7 +18,7 @@ class OrderController extends Controller {
     async createOrder() {
         const { ctx } = this;
         const body = ctx.request.body;
-        console.log(body, 1111);
+        body.mainTable.is_into = 0
         body.mainTable.goods_name = body.mainTable.goods_name.join();
         const res = await ctx.service.order.createOrder(body);
         if (res.success) {
@@ -40,8 +40,8 @@ class OrderController extends Controller {
         }
     }
 
-     // 删除订单
-     async deleteOrder() {
+    // 删除订单
+    async deleteOrder() {
         const { ctx } = this;
         const body = ctx.request.body;
         const res = await ctx.service.order.deleteOrder(body);
@@ -52,8 +52,8 @@ class OrderController extends Controller {
         }
     }
 
-     // 修改订单
-     async exWarehouse() {
+    // 修改订单
+    async exWarehouse() {
         const { ctx } = this;
         const body = ctx.request.body;
         const res = await ctx.service.order.exWarehouse(body);
@@ -61,6 +61,18 @@ class OrderController extends Controller {
             this.success('出库成功');
         } else {
             this.error('出库失败');
+        }
+    }
+
+    // 修改入库状态
+      async updateInto() {
+        const { ctx } = this;
+        const body = ctx.request.body;
+        const res = await ctx.service.order.updateInto(body);
+        if (res) {
+            this.success('操作成功');
+        } else {
+            this.error('操作成功');
         }
     }
 }

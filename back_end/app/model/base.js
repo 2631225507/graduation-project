@@ -2,8 +2,7 @@
 const moment = require('moment');
 
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize;
-
+  const { DATE } = app.Sequelize;
   return {
     created_at: {
       type: DATE,

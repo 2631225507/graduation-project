@@ -28,9 +28,10 @@ module.exports = appInfo => {
     timezone: '+08:00',
     define: {
       freezeTableName: true,
+      // timestamps: false,
       createdAt: 'created_at',
       updatedAt: 'updated_at',
-    }
+    },
   };
 
   config.cors = {
@@ -75,9 +76,9 @@ module.exports = appInfo => {
       description: '系统各个业务模块接口文档', // 接口文档描述。
       version: '1.0.0', // 接口文档版本。
     },
-    schemes: [ 'http', 'https' ], // 配置支持的协议。
-    consumes: [ 'application/json' ], // 指定处理请求的提交内容类型（Content-Type），例如application/json, text/html。
-    produces: [ 'application/json' ], // 指定返回的内容类型，仅当request请求头中的(Accept)类型中包含该指定类型才返回。
+    schemes: ['http', 'https'], // 配置支持的协议。
+    consumes: ['application/json'], // 指定处理请求的提交内容类型（Content-Type），例如application/json, text/html。
+    produces: ['application/json'], // 指定返回的内容类型，仅当request请求头中的(Accept)类型中包含该指定类型才返回。
     securityDefinitions: { // 配置接口安全授权方式。
     },
     enableSecurity: false, // 是否启用授权，默认 false（不启用）。

@@ -119,6 +119,7 @@
 
 <script>
 import { getWarehousingInfo, deleteWarehousing } from "@/api/warehousing";
+import { orderInto } from "@/api/order";
 import Pagination from "@/components/Pagination";
 import ChangeInfo from "./change";
 import DetailInfo from "./detail";
@@ -217,6 +218,11 @@ export default {
               duration: 5000,
             });
           }
+        });
+        let test = { ...row };
+        test.is_into = 0;
+        orderInto(test).then((res) => {
+          console.log(res);
         });
       });
     },

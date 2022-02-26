@@ -98,10 +98,10 @@
 </template>
 
 <script>
-import { getOrderInfo } from "@/api/order";
+import { getOrderInfo, orderInto } from "@/api/order";
 import { getStaffInfo } from "@/api/staff";
 import { getShelvesInfo } from "@/api/goods-shelves";
-import { warehousingCreate,updateWarehousing } from "@/api/warehousing";
+import { warehousingCreate, updateWarehousing } from "@/api/warehousing";
 export default {
   props: {
     formVisible: {
@@ -158,7 +158,7 @@ export default {
   methods: {
     // 获取订单信息
     getOrder() {
-      getOrderInfo({ page: 1, limit: 999 }).then((res) => {
+      getOrderInfo({ page: 1, limit: 999, is_into: 0 }).then((res) => {
         this.orderOptions = res.data.rows;
       });
     },
@@ -225,6 +225,11 @@ export default {
               });
             }
           });
+          let test = { ...this.orderInfo };
+          test.is_into = 1;
+          orderInto(test).then((res) => {
+            console.log(res);
+          });
         }
       });
     },
@@ -232,7 +237,7 @@ export default {
     updateData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-           updateWarehousing(this.orderInfo,this.editData).then((res) => {
+          updateWarehousing(this.orderInfo, this.editData).then((res) => {
             if (res.success) {
               this.$message({
                 type: "success",

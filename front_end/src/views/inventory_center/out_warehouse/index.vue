@@ -134,6 +134,7 @@ export default {
         //请求参数
         page: 1,
         limit: 10,
+        is_into: 0,
         order_number: undefined,
       },
       downloadLoading: false,

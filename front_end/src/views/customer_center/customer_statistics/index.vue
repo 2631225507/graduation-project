@@ -92,7 +92,7 @@
         </el-table-column>
         <el-table-column label="下单时间" width="100" align="center">
           <template slot-scope="{ row }">
-            {{ row.created_at.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "") }}
+            {{ row.created_at }}
           </template>
         </el-table-column>
         <el-table-column label="发货时间" width="120" align="center">

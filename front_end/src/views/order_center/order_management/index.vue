@@ -192,37 +192,40 @@
 
       <el-table-column fixed="right" label="操作" width="188" align="center">
         <template slot-scope="{ row, $index }">
-          <div v-if="row.show">
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-edit"
-              @click="handleUpadate(row, $index)"
-              >编辑</el-button
-            >
-            <el-button
-              type="danger"
-              size="mini"
-              icon="el-icon-delete"
-              @click="handleDelete(row, $index)"
-              >删除</el-button
-            >
-          </div>
+          <div v-if="row.is_into == 1">该订单已入库,无法操作</div>
           <div v-else>
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-circle-check"
-              @click="handleSave(row, $index)"
-              >保存</el-button
-            >
-            <el-button
-              type="danger"
-              size="mini"
-              icon="el-icon-close"
-              @click="handleCancle(row, $index)"
-              >取消</el-button
-            >
+            <div v-if="row.show">
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-edit"
+                @click="handleUpadate(row, $index)"
+                >编辑</el-button
+              >
+              <el-button
+                type="danger"
+                size="mini"
+                icon="el-icon-delete"
+                @click="handleDelete(row, $index)"
+                >删除</el-button
+              >
+            </div>
+            <div v-else>
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-circle-check"
+                @click="handleSave(row, $index)"
+                >保存</el-button
+              >
+              <el-button
+                type="danger"
+                size="mini"
+                icon="el-icon-close"
+                @click="handleCancle(row, $index)"
+                >取消</el-button
+              >
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -504,7 +507,7 @@ export default {
           this.saveData(row);
         } else {
           this.$message({
-            message: '请输入正确的11位手机号码',
+            message: "请输入正确的11位手机号码",
             type: "warning",
           });
         }

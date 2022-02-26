@@ -1,5 +1,4 @@
 'use strict';
-const moment = require('moment');
 const Service = require('egg').Service;
 
 class ProductService extends Service {
@@ -60,7 +59,7 @@ class ProductService extends Service {
     // 修改产品信息
     async update(product_id, product_number, product, info) {
         const { ctx } = this;
-        product.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        product.updated_at = ctx.helper.formatTime(new Date());
         try {
             const data = await ctx.model.Product.update(product, {
                 where: {

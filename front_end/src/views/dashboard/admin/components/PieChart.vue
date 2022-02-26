@@ -1,5 +1,5 @@
 <template>
-    <div :class="className" :style="{ height: height, width: width }" />
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
@@ -22,10 +22,21 @@ export default {
       type: String,
       default: "350px",
     },
+    pieData: {
+      type: Array,
+      required: true,
+    },
+  },
+  watch: {
+    pieData(val) {
+      this.chartData = val
+      this.initChart();
+    },
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      chartData: [],
     };
   },
   mounted() {
@@ -64,17 +75,12 @@ export default {
         },
         series: [
           {
-            name: "WEEKLY WRITE ARTICLES",
+            name: "力宁年度销售数据",
             type: "pie",
             roseType: "radius",
             radius: [15, 95],
             center: ["50%", "50%"],
-            data: [
-              { value: 240, name: "总销售金额（万元）" },
-              { value: 149, name: "成交订单总数（单）" },
-              { value: 100, name: "入库单数（单）" },
-              { value: 59, name: "入库总金额（万元）" },
-            ],
+            data: this.chartData,
             animationEasing: "cubicInOut",
             animationDuration: 2600,
           },

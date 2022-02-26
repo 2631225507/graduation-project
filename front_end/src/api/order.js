@@ -43,3 +43,11 @@ export function orderOut(data) {
         data
     })
 }
+
+export function orderInto(data) {
+    return service({
+        url: '/api/order/into',
+        method: 'post',
+        data
+    })
+}

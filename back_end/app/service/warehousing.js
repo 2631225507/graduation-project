@@ -1,6 +1,5 @@
 'use strict';
 const Service = require('egg').Service;
-const moment = require('moment');
 const Sequelize = require('sequelize')
 class WarehousingService extends Service {
     // 获取入库信息
@@ -56,7 +55,7 @@ class WarehousingService extends Service {
     // 修改入库信息
     async updateWarehousing(body) {
         const { ctx } = this;
-        body.newValue.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        body.newValue.updated_at = ctx.helper.formatTime(new Date());
         try {
             // 修改货架时，新货架+1，旧货架-1
             if (body.newValue.shelf_id != body.oldValue.shelf_id) {

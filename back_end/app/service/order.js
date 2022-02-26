@@ -1,6 +1,5 @@
 'use strict';
 const Service = require('egg').Service;
-const moment = require('moment');
 const Sequelize = require('sequelize')
 
 class OrderService extends Service {
@@ -12,6 +11,9 @@ class OrderService extends Service {
         const where = {}
         if (query.order_number) {
             where.order_number = { [Op.like]: `%${query.order_number}%` }
+        }
+        if ((query.is_into??''!='')) {
+            where.is_into = { [Op.eq]: `${query.is_into}` }
         }
         return await ctx.model.Order.findAndCountAll({
             distinct: true, // 不加distinct，count和实际不符
@@ -55,7 +57,7 @@ class OrderService extends Service {
     // 修改订单
     async updateOrder(body) {
         const { ctx } = this;
-        body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        body.updated_at = ctx.helper.formatTime(new Date());
         try {
             await ctx.model.Order.update(body, {
                 where: {
@@ -93,7 +95,7 @@ class OrderService extends Service {
     // 出库
     async exWarehouse(body) {
         const { ctx } = this;
-        body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        body.updated_at = ctx.helper.formatTime(new Date());;
         try {
             await ctx.model.Order.update({
                 is_issue: body.is_issue,
@@ -110,6 +112,27 @@ class OrderService extends Service {
             return null;
         }
     }
+
+    // 订单是否入库
+    async updateInto(body) {
+        const { ctx } = this;
+        body.updated_at = ctx.helper.formatTime(new Date());;
+        try {
+            await ctx.model.Order.update({
+                is_into: body.is_into,
+                updated_at: body.updated_at
+            }, {
+                where: {
+                    order_id: body.order_id
+                },
+            });
+            return true
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
 }
 
 module.exports = OrderService;

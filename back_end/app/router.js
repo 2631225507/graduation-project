@@ -42,7 +42,7 @@ module.exports = app => {
   router.post('/api/order/delete', controller.order.deleteOrder); //删除订单信息
   
   router.post('/api/order/out', controller.order.exWarehouse); //出库
-
+  router.post('/api/order/into', controller.order.updateInto); //出库
 
   router.get('/api/warehousingInfo', controller.warehousing.getWarehousing); //获取入库信息
   router.post('/api/warehousing/create', controller.warehousing.createWarehousing); //添加入库信息
@@ -50,4 +50,8 @@ module.exports = app => {
   router.post('/api/warehousing/delete', controller.warehousing.deleteWarehousing); //删除入库信息
 
   router.post('/api/customer/statistics', controller.chart.getCustomerStatistics);//客户数据统计
+
+  // 年度数据
+  router.post('/api/return/statistics', controller.chart.getReturninfo);//入库单数
+  router.post('/api/order/statistics', controller.chart.getOrderTotal);//入库单数
 };

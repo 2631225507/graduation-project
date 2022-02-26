@@ -1,5 +1,4 @@
 'use strict';
-const moment = require('moment');
 const Service = require('egg').Service;
 
 class GoodsShelvesService extends Service {
@@ -40,7 +39,7 @@ class GoodsShelvesService extends Service {
     async update(body) {
         const { ctx } = this;
         body.shelf_number = body.area_code + body.secondary_code + '-' + body.number_layers
-        body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        body.updated_at =ctx.helper.formatTime(new Date());
         try {
             return await ctx.model.GoodsShelves.update(body, {
                 where: {

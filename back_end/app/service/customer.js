@@ -1,5 +1,4 @@
 'use strict';
-const moment = require('moment');
 const Service = require('egg').Service;
 
 class CustomertService extends Service {
@@ -39,7 +38,7 @@ class CustomertService extends Service {
     // 修改客户信息
     async update(body) {
         const { ctx } = this;
-        body.updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        body.updated_at = ctx.helper.formatTime(new Date());;
         try {
             await ctx.model.Customer.update(body, {
                 where: {
