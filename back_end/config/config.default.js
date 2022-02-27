@@ -28,7 +28,6 @@ module.exports = appInfo => {
     timezone: '+08:00',
     define: {
       freezeTableName: true,
-      // timestamps: false,
       createdAt: 'created_at',
       updatedAt: 'updated_at',
     },
