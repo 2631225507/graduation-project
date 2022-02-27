@@ -53,5 +53,5 @@ module.exports = app => {
 
   // 年度数据
   router.post('/api/return/statistics', controller.chart.getReturninfo);//入库单数
-  router.post('/api/order/statistics', controller.chart.getOrderTotal);//入库单数
+  router.post('/api/order/statistics', controller.chart.getOrderTotal);//订单总数
 };

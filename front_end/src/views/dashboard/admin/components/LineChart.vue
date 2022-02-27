@@ -40,7 +40,8 @@ export default {
     chartData: {
       deep: true,
       handler(val) {
-        this.setOptions(val);
+        this.initChart()
+        // this.setOptions(val);
       },
     },
   },
@@ -61,7 +62,7 @@ export default {
       this.chart = echarts.init(this.$el, "macarons");
       this.setOptions(this.chartData);
     },
-    setOptions({ expectedData, actualData, AAAAA, BBBBB, CCCCC } = {}) {
+    setOptions({ numberReceipt, receiptAmount, totalOrder, allMoney }) {
       this.chart.setOption({
         title: {
           left: "center",
@@ -109,7 +110,7 @@ export default {
         legend: {
           top:25,
           data: [
-            "总销售金额（万元）",
+            "总销售金额（十万元）",
             "成交订单总数（单）",
             "入库单数（单）",
             "入库总金额（万元）",
@@ -117,7 +118,7 @@ export default {
         },
         series: [
           {
-            name: "总销售金额（万元）",
+            name: "总销售金额（十万元）",
             itemStyle: {
               normal: {
                 color: "#FF005A",
@@ -129,7 +130,7 @@ export default {
             },
             smooth: true,
             type: "line",
-            data: expectedData,
+            data: allMoney,
             animationDuration: 2800,
             animationEasing: "cubicInOut",
           },
@@ -149,7 +150,7 @@ export default {
                 },
               },
             },
-            data: actualData,
+            data: totalOrder,
             animationDuration: 2800,
             animationEasing: "quadraticOut",
           },
@@ -166,7 +167,7 @@ export default {
             },
             smooth: true,
             type: "line",
-            data: BBBBB,
+            data: numberReceipt,
             animationDuration: 2800,
             animationEasing: "cubicInOut",
           },
@@ -183,7 +184,7 @@ export default {
             },
             smooth: true,
             type: "line",
-            data: AAAAA,
+            data: receiptAmount,
             animationDuration: 2800,
             animationEasing: "cubicInOut",
           },

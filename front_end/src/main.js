@@ -19,6 +19,10 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
+import VueParticles from 'vue-particles'  
+Vue.use(VueParticles)  
+import dayjs from "dayjs"
+Vue.prototype.dayjs = dayjs;
 
 /**
  * If you don't want to use mock-server

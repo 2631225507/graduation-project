@@ -1,5 +1,24 @@
 <template>
   <div class="login-container">
+    <vue-particles
+      class="login-bg"
+      color="#fff"
+      :particleOpacity="0.5"
+      :particlesNumber="60"
+      shapeType="edge"
+      :particleSize="5"
+      linesColor="#dedede"
+      :linesWidth="1"
+      :lineLinked="true"
+      :lineOpacity="0.8"
+      :linesDistance="250"
+      :moveSpeed="3"
+      :hoverEffect="true"
+      hoverMode="grab"
+      :clickEffect="true"
+      clickMode="repulse"
+    >
+    </vue-particles>
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -23,7 +42,6 @@
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="on"
         />
       </el-form-item>
 
@@ -49,7 +67,7 @@
         </span>
       </el-form-item>
 
-      <el-row type="flex" style="height: 75px;">
+      <el-row type="flex" style="height: 75px">
         <el-col :span="18">
           <el-form-item prop="verifycode">
             <span class="svg-container">
@@ -64,8 +82,8 @@
         </el-col>
         <el-col :span="9">
           <!-- 随机验证码 -->
-          <el-form-item  style="margin-left: 8px">
-            <div class="identifybox" style="line-height:10px">
+          <el-form-item style="margin-left: 8px">
+            <div class="identifybox" style="line-height: 10px">
               <div @click="refreshCode">
                 <s-identify :identifyCode="identifyCode"></s-identify>
               </div>
@@ -95,7 +113,7 @@ export default {
   },
   data() {
     const validateVerifycode = (rule, value, callback) => {
-      if ((value??'')==='') {
+      if ((value ?? "") === "") {
         callback(new Error("请输入验证码"));
       } else if (value !== this.identifyCode) {
         callback(new Error("验证码错误,请重新输入"));
@@ -142,7 +160,7 @@ export default {
     },
   },
   created() {
-    this.refreshCode()
+    this.refreshCode();
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
@@ -266,17 +284,25 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
-  min-height: 100%;
+  position: relative;
+  height: 100%;
   width: 100%;
-  background: url(./back.jpg);
-  overflow: hidden;
-
+  .login-bg {
+    width: 100%;
+    height: 100%;
+    background: url(./back.jpg) no-repeat;
+    background-size: 100% 100%;
+  }
   .login-form {
-    position: relative;
+    position: absolute;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
+		left: 50%;
+		top: 50%;
+		margin-left: -175px;
+		margin-top: -150px;
+    // padding: 160px 35px 0;
+    // margin: 0 auto;
     overflow: hidden;
   }
 

@@ -15,6 +15,9 @@ class OrderService extends Service {
         if ((query.is_into??''!='')) {
             where.is_into = { [Op.eq]: `${query.is_into}` }
         }
+        if ((query.operator_id??''!='')) {
+            where.operator_id = { [Op.eq]: `${query.operator_id}` }
+        }
         return await ctx.model.Order.findAndCountAll({
             distinct: true, // 不加distinct，count和实际不符
             include: ctx.model.OrderDetail,

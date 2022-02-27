@@ -27,6 +27,7 @@ export default {
   data() {
     return {
       chart: null,
+      dateArray:[]
     };
   },
   watch: {
@@ -36,6 +37,9 @@ export default {
         this.setOptions(val);
       },
     },
+  },
+  created() {
+    this.getWeekDate()
   },
   mounted() {
     this.$nextTick(() => {
@@ -54,22 +58,14 @@ export default {
       this.chart = echarts.init(this.$el, "macarons");
       this.setOptions(this.chartData);
     },
-    setOptions({ expectedData, actualData, AAAAA, BBBBB, CCCCC } = {}) {
+    setOptions({ salesVolume} = {}) {
       this.chart.setOption({
         title: {
           left: "center",
-          text: "员工近周负责订单量"
+          text: "员工近周负责订单量",
         },
         xAxis: {
-          data: [
-            "2/7",
-            "2/6",
-            "2/5",
-            "2/4",
-            "2/3",
-            "2/2",
-            "2/1"
-          ],
+          data: this.dateArray,
           boundaryGap: false,
           axisTick: {
             show: false,
@@ -79,7 +75,7 @@ export default {
           left: 45,
           right: 20,
           bottom: 20,
-          top:55,
+          top: 55,
           containLabel: true,
         },
         tooltip: {
@@ -94,7 +90,7 @@ export default {
             show: false,
           },
         },
-       
+
         series: [
           {
             name: "总销售金额（万元）",
@@ -109,12 +105,24 @@ export default {
             },
             smooth: true,
             type: "line",
-            data: expectedData,
+            data: salesVolume,
             animationDuration: 2800,
             animationEasing: "cubicInOut",
-          }
+          },
         ],
       });
+    },
+     getWeekDate() {
+      let nowDate = new Date(); // 获取今天日期
+      nowDate.setDate(nowDate.getDate() - 6);
+      let dateTemp;
+      let flag = 1;
+      for (var i = 0; i < 7; i++) {
+        dateTemp = nowDate.getMonth() + 1 + "-" + nowDate.getDate();
+        this.dateArray.push(dateTemp);
+        nowDate.setDate(nowDate.getDate() + flag);
+      }
+      this.dateArray = Array.from(this.dateArray);
     },
   },
 };

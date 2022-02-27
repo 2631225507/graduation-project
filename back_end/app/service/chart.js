@@ -53,6 +53,9 @@ class ChartService extends Service {
         if (query.start && query.end) {
             where.created_at = { [Op.between]: [new Date(query.start).toISOString(), new Date(query.end).toISOString()] }
         }
+        if ((query.is_into ?? '') != '') {
+            where.is_into = { [Op.eq]: `${query.is_into}` }
+        }
         return await ctx.model.Order.findAndCountAll({
             distinct: true, // 不加distinct，count和实际不符
             include: ctx.model.OrderDetail,

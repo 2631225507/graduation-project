@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group />
     <!-- 年度数据 -->
     <el-row>
       <div class="year-check">
@@ -34,15 +34,6 @@ import PanelGroup from "./components/PanelGroup";
 import LineChart from "./components/LineChart";
 import PieChart from "./components/PieChart";
 import { getReturninfo, getOrderTotal } from "@/api/chart";
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145],
-    AAAAA: [21, 45, 64, 34, 22, 123, 23],
-    BBBBB: [11, 11, 111, 111, 162, 140, 145],
-    CCCCC: [22, 11, 33, 444, 67, 232, 242],
-  },
-};
 
 export default {
   name: "DashboardAdmin",
@@ -53,7 +44,6 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis,
       yearValue: "",
       returnList: null, //入库数据
       returnTotal: null, //入库总单数
@@ -63,6 +53,12 @@ export default {
       orderAmount: null, //订单总金额（扣除入库总金额）
       pieData: [], //饼图数据
       monthData: [],
+      lineChartData: {
+        numberReceipt: [],
+        receiptAmount: [],
+        totalOrder: [],
+        allMoney: [],
+      },
     };
   },
   created() {
@@ -70,16 +66,13 @@ export default {
     this.timeChang();
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type];
-    },
     // 获取年度
     timeChang() {
       const start =
         this.yearValue.getFullYear() + "-1" + "-1" + " " + "00:00:00";
       const end =
         this.yearValue.getFullYear() + "-12" + "-31" + " " + "23:59:59";
-      // const is_into = 0;
+      const is_into = "0";
       this.getRetrun(start, end);
       this.getOrder(start, end, is_into);
     },
@@ -99,9 +92,10 @@ export default {
       });
     },
     // 订单
-    getOrder(start, end) {
-      getOrderTotal({ start, end }).then((res) => {
+    getOrder(start, end, is_into) {
+      getOrderTotal({ start, end, is_into }).then((res) => {
         this.orderList = res.data.rows;
+        this.getOrderChart(this.orderList);
         // 订单总数
         this.orderTotal = res.data.count;
         // 订单总金额
@@ -110,8 +104,6 @@ export default {
             this.orderAmount += value.order_quantity * value.price;
           });
         });
-        this.orderTotal = this.orderTotal - this.returnTotal;
-        this.orderAmount = this.orderAmount - this.totalAmount;
         if (this.returnList.length && this.orderList.length) {
           this.pieData = [
             { value: this.orderAmount / 100000, name: "总销售金额（十万元）" },
@@ -214,6 +206,98 @@ export default {
           default:
             break;
         }
+      });
+      this.lineChartData.numberReceipt = numberReceipt;
+      this.lineChartData.receiptAmount = receiptAmount.map((item) => {
+        return item / 10000;
+      });
+    },
+    // 获取每月总订单详情
+    getOrderChart(data) {
+      let totalOrder = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let allMoney = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      data.forEach((item) => {
+        let time = item.created_at.slice(6, 7);
+        switch (time) {
+          case "1":
+            totalOrder[0] = totalOrder[0] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[0] += value.order_quantity * value.price;
+            });
+            break;
+          case "2":
+            totalOrder[1] = totalOrder[1] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[1] += value.order_quantity * value.price;
+            });
+            break;
+          case "3":
+            totalOrder[2] = totalOrder[2] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[2] += value.order_quantity * value.price;
+            });
+            break;
+          case "4":
+            totalOrder[3] = totalOrder[3] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[3] += value.order_quantity * value.price;
+            });
+            break;
+          case "5":
+            totalOrder[4] = totalOrder[4] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[4] += value.order_quantity * value.price;
+            });
+            break;
+          case "6":
+            totalOrder[5] = totalOrder[5] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[5] += value.order_quantity * value.price;
+            });
+            break;
+          case "7":
+            totalOrder[6] = totalOrder[6] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[6] += value.order_quantity * value.price;
+            });
+            break;
+          case "8":
+            totalOrder[7] = totalOrder[7] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[7] += value.order_quantity * value.price;
+            });
+            break;
+          case "9":
+            totalOrder[8] = totalOrder[8] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[8] += value.order_quantity * value.price;
+            });
+            break;
+          case "10":
+            totalOrder[9] = totalOrder[9] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[9] += value.order_quantity * value.price;
+            });
+            break;
+          case "11":
+            totalOrder[10] = totalOrder[10] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[10] += value.order_quantity * value.price;
+            });
+            break;
+          case "12":
+            totalOrder[11] = totalOrder[11] + 1;
+            item.order_details.forEach((value) => {
+              allMoney[11] += value.order_quantity * value.price;
+            });
+            break;
+          default:
+            break;
+        }
+      });
+      this.lineChartData.totalOrder = totalOrder;
+      this.lineChartData.allMoney = allMoney.map((item) => {
+        return item / 100000;
       });
     },
   },

@@ -9,7 +9,7 @@
           <div class="card-panel-text">今日订单总数</div>
           <count-to
             :start-val="0"
-            :end-val="102400"
+            :end-val="todayOrder"
             :duration="2600"
             class="card-panel-num"
           />
@@ -25,7 +25,7 @@
           <div class="card-panel-text">本周订单总数</div>
           <count-to
             :start-val="0"
-            :end-val="81212"
+            :end-val="weekOrder"
             :duration="3000"
             class="card-panel-num"
           />
@@ -41,7 +41,7 @@
           <div class="card-panel-text">今日销售总额</div>
           <count-to
             :start-val="0"
-            :end-val="9280"
+            :end-val="todayMoney"
             :duration="3200"
             class="card-panel-num"
           />
@@ -57,7 +57,7 @@
           <div class="card-panel-text">本周销售总额</div>
           <count-to
             :start-val="0"
-            :end-val="13600"
+            :end-val="weekMoney"
             :duration="3600"
             class="card-panel-num"
           />
@@ -69,14 +69,65 @@
 
 <script>
 import CountTo from "vue-count-to";
-
+import { getOrderTotal } from "@/api/chart";
 export default {
   components: {
     CountTo,
   },
+  data() {
+    return {
+      todayStart: "",
+      todayEnd: "",
+      todayOrder: 0,
+      weekOrder: 0,
+      weekStart: "",
+      weekEnd: "",
+      todayMoney: 0,
+      weekMoney: 0,
+    };
+  },
+  created() {
+    this.todayStart = this.dayjs().format("YYYY-MM-DD 00:00:00");
+    this.todayEnd = this.dayjs().format("YYYY-MM-DD 23:59:59");
+    this.weekStart = this.dayjs()
+      .subtract(7, "day")
+      .format("YYYY-MM-DD 00:00:00");
+    this.weekEnd = this.dayjs().format("YYYY-MM-DD 23:59:59");
+    this.getTodayOrder(this.todayStart, this.todayEnd);
+    this.getWeekOrder(this.weekStart, this.weekEnd);
+  },
   methods: {
-    handleSetLineChartData(type) {
-      this.$emit("handleSetLineChartData", type);
+    // 今日订单
+    getTodayOrder(start, end) {
+      getOrderTotal({ start, end }).then((res) => {
+        const orderList = res.data.rows;
+        // 订单总数
+        this.todayOrder = res.data.count;
+        // 订单总金额
+        if ((orderList ?? "") != "" ) {
+          orderList.forEach((item) => {
+            item.order_details.forEach((value) => {
+              this.todayMoney += value.order_quantity * value.price;
+            });
+          });
+        }
+      });
+    },
+    // 本周订单
+    getWeekOrder(start, end) {
+      getOrderTotal({ start, end }).then((res) => {
+        const orderList = res.data.rows;
+        // 订单总数
+        this.weekOrder = res.data.count;
+        // 订单总金额
+        if (orderList.length != 0) {
+          orderList.forEach((item) => {
+            item.order_details.forEach((value) => {
+              this.weekMoney += value.order_quantity * value.price;
+            });
+          });
+        }
+      });
     },
   },
 };

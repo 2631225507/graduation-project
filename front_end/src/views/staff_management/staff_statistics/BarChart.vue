@@ -33,7 +33,7 @@ export default {
     chartData: {
       deep: true,
       handler(val) {
-        this.setOptions(val);
+        this.initChart();
       },
     },
   },
@@ -54,11 +54,11 @@ export default {
       this.chart = echarts.init(this.$el, "macarons");
       this.setOptions(this.chartData);
     },
-    setOptions({ expectedData } = {}) {
+    setOptions({ totalOrder, allMoney } = {}) {
       this.chart.setOption({
         title: {
           text: "员工月销量情况",
-          left:'center'
+          left: "center",
         },
         tooltip: {
           trigger: "axis",
@@ -101,10 +101,16 @@ export default {
         ],
         series: [
           {
-            name: "数据",
+            name: "订单量",
             type: "bar",
             barWidth: "20%",
-            data: expectedData,
+            data: totalOrder,
+          },
+          {
+            name: "订单总额（万）",
+            type: "bar",
+            barWidth: "20%",
+            data: allMoney,
           },
         ],
       });
