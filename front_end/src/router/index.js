@@ -15,6 +15,7 @@ export const constantRoutes = [
       }
     ]
   },
+  // 登录页
   {
     path: '/login',
     component: () => import('@/views/login/index'),
