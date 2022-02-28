@@ -19,7 +19,7 @@ class ProductService extends Service {
                 include: [{
                     model: ctx.model.ProductDetail,
                 }],
-                // raw:true 
+                distinct: true,
             });
         } catch (error) {
             console.log(error);
@@ -78,6 +78,17 @@ class ProductService extends Service {
                 },
             });
             return { success: true };
+        } catch (error) {
+            console.log(error);
+            return { success: false };
+        }
+    }
+
+    // 查看产品详情的信息
+    async queryDetail() {
+        const { ctx } = this;
+        try {
+            return await ctx.model.ProductDetail.findAll();
         } catch (error) {
             console.log(error);
             return { success: false };

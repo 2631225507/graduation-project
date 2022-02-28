@@ -32,6 +32,12 @@ export function productDelete(data) {
     })
 }
 
+export function queryDetail() {
+    return service({
+        url: '/api/product-datail/query',
+        method: 'get',
+    })
+}
 
 export function detailDelete(data) {
     return service({

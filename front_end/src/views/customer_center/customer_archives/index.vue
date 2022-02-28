@@ -36,10 +36,8 @@
 
     <!-- 表格数据 -->
     <el-table
-      v-if="tableHeight"
       ref="multipleTable"
       :data="list"
-      :height="tableHeight"
       border
       fit
       highlight-current-row
@@ -136,7 +134,6 @@ export default {
     return {
       // 表格数据
       list: [],
-      tableHeight: "",
       total: 0, //表格数据条数
       listQuery: {
         //请求参数
@@ -153,9 +150,6 @@ export default {
   },
   created() {
     this.getList();
-  },
-  mounted() {
-    this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
     // 获取客户档案信息数据

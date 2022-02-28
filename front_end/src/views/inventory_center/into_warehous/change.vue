@@ -100,6 +100,7 @@
 <script>
 import { getOrderInfo, orderInto } from "@/api/order";
 import { getStaffInfo } from "@/api/staff";
+// import { queryDetail } from "@/api/product";
 import { getShelvesInfo } from "@/api/goods-shelves";
 import { warehousingCreate, updateWarehousing } from "@/api/warehousing";
 export default {
@@ -129,6 +130,7 @@ export default {
       orderOptions: [],
       staffOptions: [],
       storeOptions: [],
+      detailStock: [],
       //表单验证规则
       rules: {
         order_id: [
@@ -225,6 +227,8 @@ export default {
               });
             }
           });
+
+          // 修改订单状态（是否入库）
           let test = { ...this.orderInfo };
           test.is_into = 1;
           orderInto(test).then((res) => {

@@ -28,11 +28,9 @@
 
     <!-- 表格 -->
     <el-table
-      v-if="tableHeight"
       :data="tableData"
       :span-method="objectSpanMethod"
       border
-      :height="tableHeight"
     >
       <el-table-column label="订单号" width="200" align="center">
         <template slot-scope="{ row }">
@@ -129,7 +127,6 @@ export default {
   data() {
     return {
       tableData: [],
-      tableHeight: "",
       total: 0, //表格总条数
       formVisible: false, //添加修改弹窗
       dialogVisible: false, //订单详情弹窗
@@ -143,9 +140,6 @@ export default {
       },
       downloadLoading: false,
     };
-  },
-  mounted() {
-    this.tableHeight = window.innerHeight - 188 - 55;
   },
   created() {
     this.getList();

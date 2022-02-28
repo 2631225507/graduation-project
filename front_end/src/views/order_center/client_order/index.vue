@@ -193,6 +193,9 @@ export default {
       ruleForm: {
         client_id: "",
         client_phone: "",
+        province_id: "",
+        city_id: "",
+        area_id: "",
         goods_name: [],
       },
       tableData: [], //表格数据
@@ -280,6 +283,16 @@ export default {
         });
         this.ruleForm.client_name = obj.customer_name;
         this.ruleForm.client_phone = parseInt(obj.customer_phone);
+        this.ruleForm.province = obj.province;
+        this.ruleForm.province_id = JSON.stringify(obj.province_id);
+        this.getCity({ code: obj.province_id });
+        this.ruleForm.city_id = JSON.stringify(obj.city_id);
+        this.ruleForm.city = obj.city;
+        this.isSelectCity = false;
+        this.getArea({ code: obj.city_id });
+        this.isSelectArea = false;
+        this.ruleForm.area_id = JSON.stringify(obj.area_id);
+        this.ruleForm.area = obj.area;
         this.products = obj.promoting_products.split(",");
       }
     },

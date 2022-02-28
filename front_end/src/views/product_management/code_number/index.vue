@@ -35,13 +35,7 @@
     </div>
 
     <!-- 表格 -->
-    <el-table
-      v-if="tableHeight"
-      :data="tableData"
-      :height="tableHeight"
-      border
-      style="width: 100%"
-    >
+    <el-table :data="tableData" border style="width: 100%">
       <el-table-column
         prop="product_number"
         label="产品编号"
@@ -137,26 +131,22 @@ export default {
       },
       detailTitle: "详情",
       list: [],
-      editData:{},
+      editData: {},
       dialogForm: false, //添加修改弹窗
       dialogStatus: "", //添加修改弹窗标题
       dialogVisible: false, //产品详情弹窗
       downloadLoading: false,
-      tableHeight: "",
     };
   },
   created() {
     this.getList();
-  },
-  mounted() {
-    this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
     // 获取产品信息
     getList() {
       getProductInfo(this.listQuery).then((res) => {
         this.tableData = res.data.rows;
-        this.total = this.tableData.length
+        this.total = res.data.count;
       });
     },
     // 查询数据

@@ -27,9 +27,7 @@
     </div>
     <!-- 表格数据 -->
     <el-table
-      v-if="tableHeight"
       :data="tableData"
-      :height="tableHeight"
       :span-method="objectSpanMethod"
       border
       style="width: 100%"
@@ -193,6 +191,7 @@
       <el-table-column fixed="right" label="操作" width="188" align="center">
         <template slot-scope="{ row, $index }">
           <div v-if="row.is_into == 1">该订单已入库,无法操作</div>
+          <div v-else-if="row.is_issue == 1">该订单已出库,无法操作</div>
           <div v-else>
             <div v-if="row.show">
               <el-button
@@ -262,7 +261,6 @@ export default {
     return {
       tableData: [],
       downloadLoading: false,
-      tableHeight: "",
       cancleData: {},
       total: 0, //表格总条数
       operatorOptions: [], //订单负责人下拉框
@@ -314,9 +312,6 @@ export default {
     this.getStaff();
     this.isSelectCity = false;
     this.isSelectArea = false;
-  },
-  mounted() {
-    this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
     // 获取订单信息

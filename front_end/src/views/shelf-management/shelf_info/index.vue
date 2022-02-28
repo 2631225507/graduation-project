@@ -36,10 +36,8 @@
 
     <!-- 表格数据 -->
     <el-table
-      v-if="tableHeight"
       ref="multipleTable"
       :data="list"
-      :height="tableHeight"
       border
       @selection-change="handleSelectionChange"
     >
@@ -150,7 +148,6 @@ export default {
       },
       editData: {}, //编辑数据
       detailData:{},//详情数据
-      tableHeight: "", //表格高度
       multipleSelection: [], //表格勾选数据
       downloadLoading: false,
       dialogVisible: false, //查看详情弹窗
@@ -161,9 +158,6 @@ export default {
   },
   created() {
     this.getList();
-  },
-  mounted() {
-    this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
     // 获取货架数据数据

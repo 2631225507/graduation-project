@@ -36,9 +36,7 @@
 
     <!-- 表格数据 -->
     <el-table
-      v-if="tableHeight"
       ref="multipleTable"
-      :height="tableHeight"
       :data="list"
       border
       @selection-change="handleSelectionChange"
@@ -144,14 +142,10 @@ export default {
       editData: {}, //编辑数据
       dialogStatus: "", //区分添加或修改弹窗
       downloadLoading: false,
-      tableHeight: "", //表格高度
     };
   },
   created() {
     this.getList();
-  },
-  mounted() {
-    this.tableHeight = window.innerHeight - 188 - 55;
   },
   methods: {
     // 获取员工信息数据

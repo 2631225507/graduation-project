@@ -20,11 +20,9 @@
 
     <!-- 表格 -->
     <el-table
-      v-if="tableHeight"
       :data="tableData"
       :span-method="objectSpanMethod"
       border
-      :height="tableHeight"
     >
       <el-table-column
         prop="order_number"
@@ -127,7 +125,6 @@ export default {
   components: { Pagination },
   data() {
     return {
-      tableHeight: "",
       tableData: [],
       total: 0, //表格总条数
       listQuery: {
@@ -195,9 +192,6 @@ export default {
         }
       });
     },
-  },
-  mounted() {
-    this.tableHeight = window.innerHeight - 188 - 55;
   },
 };
 </script>
