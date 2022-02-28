@@ -38,7 +38,7 @@ module.exports = app => {
 
   router.get('/api/orderInfo', controller.order.getOrder); //获取客户信息
   router.post('/api/order/create', controller.order.createOrder); //添加订单信息
-  router.post('/api/order/update', controller.order.updateOrder); //修改产品信息
+  router.post('/api/order/update', controller.order.updateOrder); //修改订单信息
   router.post('/api/order/delete', controller.order.deleteOrder); //删除订单信息
   
   router.post('/api/order/out', controller.order.exWarehouse); //出库
@@ -54,4 +54,7 @@ module.exports = app => {
   // 年度数据
   router.post('/api/return/statistics', controller.chart.getReturninfo);//入库单数
   router.post('/api/order/statistics', controller.chart.getOrderTotal);//订单总数
+
+  // 上传图片
+  router.post('/file', controller.file.saveAvatar);
 };

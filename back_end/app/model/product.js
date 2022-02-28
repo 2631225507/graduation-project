@@ -23,6 +23,10 @@ module.exports = app => {
         type: STRING(32),
         allowNull: true
       },
+      img: {
+        type: STRING(255),
+        allowNull: true
+      },
       price: {
         type: INTEGER(20),
         allowNull: true

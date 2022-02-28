@@ -56,6 +56,8 @@ module.exports = appInfo => {
     },
   };
 
+  config.uploadDir = 'app/public/img/upload';
+
   config.validate = {
     // convert: false,
     // validateRoot: false,

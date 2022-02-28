@@ -27,22 +27,6 @@ class ProductService extends Service {
         }
     }
 
-    // 获取新增的产品ID
-    // async getId(product_number) {
-    //     const { ctx } = this
-    //     try {
-    //         return await ctx.model.Product.findOne({
-    //             where: {
-    //                 product_number
-    //             },
-    //             attributes: ['product_id']
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         return false
-    //     }
-    // }
-
     // 添加产品信息
     async create(product, info) {
         const { ctx } = this

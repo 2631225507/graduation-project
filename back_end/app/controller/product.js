@@ -27,6 +27,7 @@ class ProductController extends Controller {
         const product = {
             product_number:body.product_number,
             product_name:body.product_name,
+            img:body.img,
             price:body.price,
             type:body.type
         }
@@ -50,6 +51,7 @@ class ProductController extends Controller {
         const product_number =body.product_number
         const product = {
             product_name:body.product_name,
+            img:body.img,
             price:body.price,
             type:body.type
         }

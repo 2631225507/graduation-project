@@ -14,9 +14,13 @@
     "egg-sequelize": "^6.0.0",
     "egg-swagger-doc": "^2.3.2",
     "egg-validate": "^2.0.2",
+    "fs": "0.0.1-security",
     "md5": "^2.3.0",
+    "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "path": "^0.12.7",
+    "silly-datetime": "^0.1.2"
   },
   "devDependencies": {
     "autod": "^3.0.1",

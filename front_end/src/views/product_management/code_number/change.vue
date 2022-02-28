@@ -4,7 +4,7 @@
       :title="dialogStatus == 'create' ? '添加产品信息' : '编辑产品信息'"
       :visible.sync="isShow"
       center
-      width="50%"
+      width="60%"
       @close="cancleClick"
     >
       <el-form
@@ -28,6 +28,17 @@
             v-model="productData.price"
             style="width: 100%"
           />
+        </el-form-item>
+        <el-form-item label="图片" prop="img">
+          <el-upload
+            class="avatar-uploader"
+            action="http://127.0.0.1:7001/file"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
         <el-row
           v-for="(domain, index) in productData.product_details"
@@ -88,6 +99,7 @@ export default {
         product_details: [],
       },
       edit: {},
+      imageUrl: "",
       isShow: this.dialogForm,
       rules: {
         product_name: [
@@ -96,6 +108,7 @@ export default {
         type: [
           { required: true, message: "请选择商品类别", trigger: "change" },
         ],
+        img: [{ required: true, message: "请上传商品图片", trigger: "change" }],
         price: [{ required: true, message: "请输入价格", trigger: "change" }],
       },
     };
@@ -121,7 +134,7 @@ export default {
     if (this.dialogStatus == "update") {
       this.edit = { ...this.editData };
       this.productData = this.edit;
-      console.log(this.productData, 11);
+       this.imageUrl=this.productData.img
     }
   },
   methods: {
@@ -148,6 +161,13 @@ export default {
           }
         }
       });
+    },
+    // 图片上传成功
+    handleAvatarSuccess(response, file, fileList) {
+      if (response.success) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.productData.img = response.data.file;
+      }
     },
     // 提交产品信息（添加）
     createData() {
@@ -219,5 +239,28 @@ export default {
 }
 ::v-deep input[type="number"] {
   -moz-appearance: textfield !important;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 150px;
+  height: 150px;
+  line-height: 150px;
+  text-align: center;
+}
+.avatar {
+  width: 150px;
+  height: 150px;
+  display: block;
 }
 </style>
