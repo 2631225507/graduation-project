@@ -10,7 +10,7 @@ import getPageTitle from '@/utils/get-page-title' //获取页面标题
 NProgress.configure({ showSpinner: false })
 
 // 无重定向白名单
-const whiteList = ['/login', '/auth-redirect']
+const whiteList = ['/index','/login', '/auth-redirect']
 
 // 没有登录的时候，去访问首页，自动跳到登录页
 // 已经登录的时候，去访问登录页，自动跳到首页
