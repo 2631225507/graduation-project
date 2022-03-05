@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/layout'
 Vue.use(Router)
-// import componentsRouter from './modules/components'
 export const constantRoutes = [
   {
     path: '/redirect',
@@ -25,11 +24,6 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
   {
@@ -204,7 +198,6 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
-  // componentsRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]
 

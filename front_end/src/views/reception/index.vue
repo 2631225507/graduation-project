@@ -59,14 +59,14 @@
 
     <!-- 关于我们 -->
     <el-footer style="height: 450px">
-      <div class="container">
+      <div class="container" id="about">
         <!-- 左侧区域 -->
         <div class="left-area">
           <div class="left-logo">
             <img
-              src="./logo.png"
+              src="./logo.jpg"
               alt="logo"
-              style="width: 200px; height: 80px"
+              style="width: 350px; height: 80px; margin-right: 70px"
             />
           </div>
           <!-- 经营范围 -->
@@ -169,12 +169,23 @@
       <!-- 版权 -->
       <div class="copy-right">Copyright © 2022.HHG All rights reserved</div>
     </el-footer>
+
+    <el-tooltip placement="top" content="返回顶部">
+      <back-to-top
+        :custom-style="myBackToTopStyle"
+        :visibility-height="300"
+        :back-position="50"
+        transition-name="fade"
+      />
+    </el-tooltip>
   </div>
 </template>
 
 <script>
 import { getProductInfo } from "@/api/product";
+import BackToTop from "@/components/BackToTop";
 export default {
+  components: { BackToTop },
   data() {
     return {
       currentIndex: 0,
@@ -186,7 +197,7 @@ export default {
         },
         {
           title: "About",
-          href: "#",
+          href: "#about",
           content: "关于我们",
         },
         {
@@ -219,6 +230,15 @@ export default {
       ],
       form: {},
       productArr: [],
+      myBackToTopStyle: {
+        right: "50px",
+        bottom: "50px",
+        width: "40px",
+        height: "40px",
+        "border-radius": "4px",
+        "line-height": "45px", // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
+        background: "#e7eaf1", // 按钮的背景颜色 The background color of the button
+      },
     };
   },
   created() {

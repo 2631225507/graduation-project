@@ -5,7 +5,6 @@ import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
-  // baseURL: process.env.VUE_APP_BASE_API, 
   baseURL: 'http://127.0.0.1:7001'
 })
 
@@ -13,9 +12,6 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在发送请求之前做些什么
-    // if (store.getters.token) {
-    //   config.headers['X-Token'] = getToken()
-    // }
     config.headers.Authorization = 'Bearer ' + getToken()
     return config;
   },

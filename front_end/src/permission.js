@@ -10,7 +10,7 @@ import getPageTitle from '@/utils/get-page-title' //获取页面标题
 NProgress.configure({ showSpinner: false })
 
 // 无重定向白名单
-const whiteList = ['/index','/login', '/auth-redirect']
+const whiteList = ['/login', '/auth-redirect','/index']
 
 // 没有登录的时候，去访问首页，自动跳到登录页
 // 已经登录的时候，去访问登录页，自动跳到首页
@@ -47,7 +47,8 @@ router.beforeEach(async (to, from, next) => {
           // 删除令牌并转到登录页面重新登录
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
+          // next(`/login?redirect=${to.path}`)
+          next(`/login`)
           NProgress.done()
         }
       }
