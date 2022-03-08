@@ -72,7 +72,7 @@
       <el-table-column label="创建时间" min-width="150px" align="center">
         <template slot-scope="{ row }">
           <span>{{
-            row.created_at.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "")
+            row.created_at
           }}</span>
         </template>
       </el-table-column>

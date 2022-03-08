@@ -79,7 +79,7 @@ export default {
     // 入库
     getRetrun(start, end) {
       getReturninfo({ start, end }).then((res) => {
-        this.returnList = res.data.rows;
+        this.returnList = res.data.rows || [];
         this.getReturn(this.returnList);
         // 入库单数
         this.returnTotal = res.data.count;
@@ -94,7 +94,7 @@ export default {
     // 订单
     getOrder(start, end, is_into) {
       getOrderTotal({ start, end, is_into }).then((res) => {
-        this.orderList = res.data.rows;
+        this.orderList = res.data.rows || [];
         this.getOrderChart(this.orderList);
         // 订单总数
         this.orderTotal = res.data.count;

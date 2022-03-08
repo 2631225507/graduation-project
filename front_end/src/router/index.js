@@ -15,11 +15,11 @@ export const constantRoutes = [
     ]
   },
   // 前台
-  {
-    path: '/index',
-    component: () => import('@/views/reception/index'),
-    hidden: true
-  },
+  // {
+  //   path: '/index',
+  //   component: () => import('@/views/reception/index'),
+  //   hidden: true
+  // },
   // 登录页
   {
     path: '/login',

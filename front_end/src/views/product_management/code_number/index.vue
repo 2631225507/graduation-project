@@ -39,7 +39,7 @@
       <el-table-column
         prop="product_number"
         label="产品编号"
-        min-width="200"
+        width="200"
         align="center"
       ></el-table-column>
       <el-table-column label="产品名称" min-width="150" align="center">
@@ -53,9 +53,14 @@
       </el-table-column>
       <el-table-column prop="price" label="单价" width="120" align="center">
       </el-table-column>
+       <el-table-column label="图片" min-width="120" align="center">
+        <template slot-scope="{ row }">
+          <img :src="row.img" alt="产品图片" style="width:80px;height:80px">
+        </template>
+      </el-table-column>
       <el-table-column label="上架日期" min-width="120" align="center">
         <template slot-scope="{ row }">
-          {{ row.created_at.replace(/T/g, " ").replace(/\.[\d]{3}Z/, "") }}
+          {{ row.created_at }}
         </template>
       </el-table-column>
       <el-table-column
